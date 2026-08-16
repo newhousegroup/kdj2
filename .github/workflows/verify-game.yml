@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - release-0.14.2
+      - release-0.14.3
 
 jobs:
   verify:
@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node --check src/game-0.14.2.js
+      - run: node --check src/game-0.14.3.js
       - run: node --check src/patch-0.10.0.js
       - run: node --check src/patch-0.11.0.js
       - run: node --check src/patch-0.11.1.js
@@ -22,5 +22,5 @@ jobs:
       - run: node --check src/patch-0.11.3.js
       - run: node --check src/patch-0.12.0.js
       - run: node --check src/patch-0.12.1.js
-      - run: node --check src/patch-0.14.2.js
-      - run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.2.js
+      - run: node --check src/patch-0.14.3.js
+      - run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.3.js
