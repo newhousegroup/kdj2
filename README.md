@@ -1,25 +1,33 @@
 # Kill das James 2
 
-**Version 0.9.2**
+**Version 0.9.3**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.9.2 startup repair
+## 0.9.3 speed stability
 
-Version 0.9.2 repairs the 0.9.1 startup regression without changing the intended 0.9.1 gameplay tuning.
+Version 0.9.3 fixes a speed-control edge case and changes the HUD speed readout to a normalized 0–35 scale.
 
-- 0.9.1 contained an unescaped template literal inside its generated patch bundle. That produced a JavaScript `SyntaxError` before the game could attach the Create/Join handlers.
-- 0.9.2 removes the broken cosmetic captain-hint source patch before loading the 0.9.1 gameplay changes.
-- The actual generated game module is now verified in GitHub Actions rather than only syntax-checking the small launcher file.
+- W no longer snaps the ship downward when sail decay or cannon damage lowers the current allowed maximum speed while the ship is still coasting faster than that new cap.
+- W accelerates only while the ship is below its current forward cap; excess momentum now bleeds away naturally through drag.
+- S similarly reduces speed without forcing invalid jumps around the reverse-speed cap.
+- The host repairs any non-finite ship-speed state back to zero as an additional safety guard.
+- The HUD no longer exposes raw world-units-per-second values. Full undamaged Full-sail speed maps to **35** on the displayed scale, with intermediate physical speeds scaled proportionally from 0 to 35.
+- Reverse movement continues to be marked `REV`.
+- The generated-game CI verifier is retained and validates all nested loader stages plus the final generated module.
+
+## 0.9.2 startup repair retained
+
+- The 0.9.1 generated-loader syntax regression remains repaired.
+- The actual generated game module is verified in GitHub Actions rather than only syntax-checking the small launcher file.
 - The verifier recursively materializes every runtime loader stage and runs `node --check` against the final generated game source.
-- The repaired generated module retains the 0.9.1 steering changes, speed HUD, 8-second cannon cooldown, health/swords, five-second flag capture, sails, compass, and persistent-room battle flow.
 
-## 0.9.1 handling and speed HUD retained
+## Handling and HUD
 
 - Helm steering uses host-authoritative A/D input and scales smoothly with current boat speed.
 - W/S incrementally changes the ship's current speed rather than commanding an immediate target throttle.
 - Ships retain momentum after the captain leaves the helm and gradually lose speed from passive drag.
-- A floating **speed indicator** sits directly below the personal HP bar and shows the current speed of the local player's own ship. Reverse movement is marked `REV`.
+- A floating **speed indicator** sits directly below the personal HP bar and uses the 0–35 display scale.
 - Cannon cooldown is **8 seconds per individual cannon**.
 - Cannon mobility damage remains a host-authoritative random **4–9 percentage points** per hit.
 
