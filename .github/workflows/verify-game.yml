@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --check src/game-0.17.2.js
       - run: node --check src/game-0.17.1.js
       - run: node --check src/game-0.12.1.js
       - run: node --check src/patch-0.10.0.js
