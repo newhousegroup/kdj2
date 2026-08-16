@@ -240,6 +240,11 @@ const CANNON_SHOT_TTL = 4400;`, "round and cannon constants");
   );
 
   patch(
+    '  if (p.role) return { type: "leave", label: p.role === "captain" ? "Leave helm" : "Leave rigging" };',
+    '  if (p.role) return { type: "leave", label: p.role === "captain" ? "Leave helm" : p.role === "gunner" ? "Leave cannon" : "Leave rigging" };',
+    "gunner leave label"
+  );
+  patch(
     `    if (p.team === p.ship && rig && near(rig.rigX, rig.rigZ, 2.4)) return { type: "sailmaster", label: "Work the rigging" };
     if (near(0, 3.3, 2.2)) return { type: "down", label: "Go below deck" };`,
     `    if (p.team === p.ship && rig && near(rig.rigX, rig.rigZ, 2.4)) return { type: "sailmaster", label: "Work the rigging" };
@@ -559,55 +564,6 @@ function handleGrapple(p) {`,
     "reset fire input sequence"
   );
 
-  patch(
-    `function updateCaptainCompass(p) {
-  const compass = document.querySelector("#captainCompass");
-  if (!compass) return;
-  const active = Boolean(p?.spawned && p.role === "captain" && state?.phase === "playing");
-  compass.classList.toggle("hidden", !active);
-  if (!active) return;
-
-  const ship = state.ships[p.ship];
-  const heading = ((THREE.MathUtils.radToDeg(ship.heading) % 360) + 360) % 360;
-  const halfView = 62.5;
-  for (const mark of compass.querySelectorAll("[data-bearing]")) {
-    const bearing = Number(mark.dataset.bearing);
-    const diff = ((bearing - heading + 540) % 360) - 180;
-    const visible = Math.abs(diff) <= halfView;
-    mark.style.display = visible ? "block" : "none";
-    if (!visible) continue;
-    mark.style.left = (50 + (diff / halfView) * 50) + "%";
-    const edge = Math.abs(diff) / halfView;
-    mark.style.opacity = String(Math.max(0.16, 1 - edge * edge));
-  }
-}
-
-function normalizeAngle(value) { return Math.atan2(Math.sin(value), Math.cos(value)); }`,
-    `function updateCaptainCompass(p) {
-  const compass = document.querySelector("#captainCompass");
-  if (!compass) return;
-  const active = Boolean(p?.spawned && p.role === "captain" && state?.phase === "playing");
-  compass.classList.toggle("hidden", !active);
-  if (!active) return;
-
-  const ship = state.ships[p.ship];
-  const heading = ((THREE.MathUtils.radToDeg(ship.heading) % 360) + 360) % 360;
-  const halfView = 62.5;
-  for (const mark of compass.querySelectorAll("[data-bearing]")) {
-    const bearing = Number(mark.dataset.bearing);
-    const diff = ((bearing - heading + 540) % 360) - 180;
-    const visible = Math.abs(diff) <= halfView;
-    mark.style.display = visible ? "block" : "none";
-    if (!visible) continue;
-    mark.style.left = (50 + (diff / halfView) * 50) + "%";
-    const edge = Math.abs(diff) / halfView;
-    mark.style.opacity = String(Math.max(0.16, 1 - edge * edge));
-  }
-}
-
-function normalizeAngle(value) { return Math.atan2(Math.sin(value), Math.cos(value)); }`,
-    "captain compass retained"
-  );
   patch(
     'function normalizeAngle(value) { return Math.atan2(Math.sin(value), Math.cos(value)); }',
     `function updateCaptainCompass(p) {
