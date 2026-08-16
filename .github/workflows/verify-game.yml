@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - fix-0.9.2
+      - fix-0.9.3
 
 jobs:
   verify:
@@ -15,3 +16,4 @@ jobs:
         with:
           node-version: 22
       - run: node scripts/verify-loader.mjs
+      - run: node scripts/verify-loader.mjs src/game-0.9.3.js
