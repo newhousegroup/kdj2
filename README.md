@@ -1,77 +1,80 @@
 # Kill das James 2
 
-**Version 0.8.0**
+**Version 0.9.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.8.0 health and swords
+## 0.9.0 combat and helm refinement
 
-Version 0.8.0 adds player health and close-range sword combat for boarding actions.
+Version 0.9.0 refines player combat, flag capture, the health HUD, and ship handling.
 
-- Every sailor has **100 HP**.
-- The local player's health is shown as a compact health bar in the in-game HUD.
-- Sailors visibly carry swords. First-person players also see a simple first-person sword model.
-- While not occupying the helm, rigging, or a cannon, **Space** performs a sword attack. Touch devices show a **SWORD** button.
-- Sword combat is host-authoritative.
-- A sword hit deals **25 HP** and has a short arcade cooldown.
-- Hits only register against enemy-team sailors on the same ship and same deck, within close range and generally in front of the attacker.
-- Friendly fire is disabled.
-- At 0 HP, the sailor is out for the remainder of the current battle. Their active model is removed, movement/interactions stop, and their camera switches to a waiting view around their own ship.
-- An eliminated sailor cannot respawn during the same battle.
-- The normal next-battle reset revives every connected sailor at **100 HP** and places them back aboard their own team's ship.
-- Combat feedback is intentionally non-graphic.
+- The personal HP bar is moved out of the crowded top status row into a floating upper-right panel beneath the top bar.
+- Capturing the enemy flag now requires holding the interact control continuously for **5 seconds** while remaining in capture range.
+- Releasing the control or moving away resets capture progress.
+- The capture prompt shows the remaining hold time while a capture is in progress.
+- Sword attacks now select the **nearest valid enemy** within melee reach and within a **±30° cone** in front of the attacker.
+- Sword reach is 2.5 local world units; friendly fire remains disabled.
+- Helm A/D steering sensitivity is reduced substantially.
+- W/S now incrementally increases/decreases the ship's current speed instead of commanding an immediate target throttle.
+- Ships retain momentum after the captain leaves the helm and gradually lose speed from passive drag instead of immediately stopping.
+- A ship without a captain continues coasting but cannot change course until somebody takes the helm again.
+
+## Player health and swords
+
+- Every player begins a battle with **100 HP**.
+- Swords provide close-range player-vs-player combat during boarding and below-deck fights.
+- Sword hits remove 25 HP.
+- At 0 HP, a player is out for the rest of that battle, cannot move or interact, and waits in a spectator view.
+- The next battle automatically revives all connected players at full health on their own team's ship.
 
 ## Cannons
 
-- Each ship has four usable deck cannons: fore/aft positions on both port and starboard sides.
-- Walk near a cannon and press **E** to man it. A cannon can only have one gunner at a time.
-- While serving as gunner, **A / D** adjusts the cannon within its broadside arc.
-- **Space** fires on desktop. Touch devices show a dedicated **FIRE** button while manning a cannon.
-- Each individual cannon has a **10-second cooldown**.
-- Cannon projectiles and hit detection are host-authoritative and synchronized through the room state.
-- Each successful cannon hit reduces enemy ship mobility by a random **4–9 percentage points**, with the existing 25% mobility floor retained.
-- Cannon range is shorter than the 300-unit starting separation, requiring ships to close distance before firing becomes useful.
+- Each ship has four usable deck cannons, two on each side.
+- Cannons are individually occupied and aimed.
+- Each cannon has a **10-second cooldown**.
+- Successful cannon hits remove a host-authoritative random **4–9 percentage points** of enemy ship mobility.
+- Ship mobility cannot fall below 25%.
+- Cannon projectiles, hits, occupation, and damage are host-authoritative and synchronized to the room.
 
-## Sailing and round flow
+## Sailing
 
-- Two ships: British **HMS Resolute** and French **Fleur Royale**.
-- Up to six players share one four-color room code.
-- Players are automatically assigned to the less-populated team and cannot switch teams while in that room.
-- A player must occupy the helm for a ship to move.
-- A separate sailmaster can control **Reefed**, **Cruising**, and **Full** sails.
-- Sail state drops one level after about 20 seconds: Full → Cruising → Reefed.
-- Reefed provides 55% sail power, Cruising 78%, and Full 100%.
 - Ships begin 300 world units apart.
-- Capturing the opposing team's lower-deck flag wins the battle. A player cannot capture their own flag.
-- The same room stays connected across repeated battles.
-- After a victory, the next battle starts after **6 seconds**, resetting ships, stations, flags, player health, and player positions while preserving teams and connections.
+- Sail state has three levels: **Reefed**, **Cruising**, and **Full**.
+- Full drops to Cruising after about 20 seconds; Cruising drops to Reefed after another 20 seconds.
+- Manually changing the sail level restarts that timer.
+- Sail meshes visibly open and reef with the selected state.
+- Captains receive a top-center heading compass while at the helm.
 
-## Controls
+## Battle flow
 
-- **WASD** — walk relative to view direction; steer/throttle while captain; aim left/right while gunner.
+- One four-color room can host repeated battles without reconnecting players.
+- Capturing the opposing flag ends the current battle.
+- The room waits **6 seconds** and then automatically starts the next battle.
+- Ships, mobility, stations, projectiles, player health, and positions reset while team assignments and network connections remain.
+
+## Core controls
+
+- **WASD** — walk while on foot.
+- **W / S at helm** — increase / decrease current ship speed.
+- **A / D at helm** — steer.
 - **Mouse / touch drag** — look around.
-- **E** — interact with helm, rigging, cannon, hatch, or flag; leave an occupied station.
+- **E** — interact; hold for 5 seconds to capture the enemy flag.
 - **G** — cross to the other ship when close enough.
-- **Space** — sword attack while free, change sails while sailmaster, or fire while gunner.
-- **Pinch in third person** / **mouse wheel** — adjust third-person camera distance.
-
-## Camera and HUD
-
-- First person is the default; Settings can switch to third person.
-- The ship-status HUD only exposes the local team's ship information.
-- Captains receive a top-center heading compass based on the ship's actual heading.
-- The compass shows N, NE, E, SE, S, SW, W, and NW with intermediate marks and faded edges.
-- Eliminated players see a waiting notice until the next battle.
-- Startup failures display a visible `Game failed to load: ...` message in the lobby.
+- **Space** — sword attack while on foot, sail control while serving as sailmaster, or cannon fire while serving as gunner.
+- **A / D at cannon** — aim the cannon.
+- Third-person camera supports pinch zoom on touch devices and mouse-wheel zoom on desktop.
 
 ## Multiplayer model
 
 Kill das James 2 uses:
 
-- PeerJS Cloud for signaling.
-- WebRTC DataChannels for realtime game traffic.
-- Cloudflare TURN fallback for cross-network reliability.
-- Host-authoritative team assignment, movement, ship collision, stations, sailing, cannon shots/hits, sword hits/health, boarding, flag victory, cooldown, and battle resets.
+- Up to six players per room.
+- Locked British/French team assignment for the lifetime of a room connection.
+- Four-color room codes using Coral, Peach, Yellow, Turquoise, Blue, and Purple.
+- PeerJS Cloud signaling.
+- WebRTC DataChannels for realtime room/game traffic.
+- Cloudflare TURN fallback.
+- Host-authoritative ship movement, collision, crew stations, sails, cannon combat, sword combat, health, flag capture, cooldowns, and battle resets.
 
 ## Netlify / TURN
 
