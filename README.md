@@ -1,8 +1,17 @@
 # Kill das James 2
 
-**Version 0.11.0**
+**Version 0.11.1**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.11.1 navigation correction
+
+- Corrected the ship coordinate convention so positive speed now travels toward the physical bow and the captain's forward view, rather than opposite the visible ship direction.
+- Corrected helm turn input so **A turns left/port** and **D turns right/starboard** while moving forward; reverse steering remains naturally reversed.
+- Starting headings were rotated 180 degrees so the two ships still begin facing each other after the forward-direction correction.
+- The captain compass now reports the physical bow heading, keeping compass marks and the enemy-bearing indicator aligned with actual travel.
+- Reefed sails now use an explicit **50% propulsion factor**, so an undamaged Reefed ship tops out at half Full-sail speed instead of behaving like a stopped state.
+- All 0.11.0 world, island, sun, lower-deck, combat, cannon, and multiplayer features are retained.
 
 ## 0.11.0 navigation and world-detail pass
 
