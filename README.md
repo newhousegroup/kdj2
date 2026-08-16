@@ -1,8 +1,17 @@
 # Kill das James 2
 
-**Version 0.13.1**
+**Version 0.14.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.14.0 emergency camera recovery
+
+- Emergency rollback to the last known-good **0.12.1 gameplay/render chain** after the 0.13.x camera became nonfunctional in live testing.
+- The entire 0.13.x **grappling fall-in-water system is removed** from the active build: no 20% boarding failure, no swimming state, no water recovery rolls, and no water-specific camera branch.
+- Grappling is restored to the reliable behavior: when the ships are within grappling range, **G transfers the sailor directly to the other ship**.
+- The normal first-person/third-person camera and touch/mouse look paths are restored to their pre-0.13 implementation.
+- The 0.13.x online-player panel, round-objective fade, and related render-loop changes are temporarily excluded from the active build so camera reliability takes priority. They can be reintroduced individually after isolated testing.
+- All 0.12.1 visual work remains: detailed uniforms and flags, island and island collision, premium sun, lower-deck detail, compass enemy bearing, integer 0–35 speed display, combat, cannons, sailing, and multiplayer.
 
 ## 0.13.1 runtime performance repair
 
