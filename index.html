@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=0.4.0">
+  <link rel="stylesheet" href="styles.css?v=0.5.0">
 </head>
 <body>
   <div id="gameRoot">
@@ -36,7 +36,7 @@
         </div>
 
         <p id="lobbyStatus" class="status"></p>
-        <span class="version">0.4.0</span>
+        <span class="version">0.5.0</span>
       </div>
     </section>
 
@@ -93,7 +93,7 @@
           <button id="touchGrapple">G</button>
           <button id="touchRigging" class="boost hidden">SAILS</button>
         </div>
-        <span class="touch-look-hint">Drag open space to look</span>
+        <span class="touch-look-hint">Drag to look · pinch in third person to zoom</span>
       </div>
     </section>
 
@@ -110,7 +110,7 @@
         <div class="setting-row">
           <div>
             <strong>Camera</strong>
-            <p>First person is the default. Third person follows behind your sailor.</p>
+            <p>First person is the default. Third person follows behind your sailor; pinch on touch devices to change distance.</p>
           </div>
           <div class="segmented" role="group" aria-label="Camera mode">
             <button id="firstPersonBtn" data-camera="first">First person</button>
@@ -131,8 +131,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-  <script src="version.js?v=0.4.0"></script>
-  <script src="src/network.js?v=0.4.0"></script>
-  <script type="module" src="src/game-0.4.js?v=0.4.0"></script>
+  <script src="version.js?v=0.5.0"></script>
+  <script src="src/network.js?v=0.5.0"></script>
+  <script type="module" src="src/game-0.5.js?v=0.5.0"></script>
 </body>
 </html>
