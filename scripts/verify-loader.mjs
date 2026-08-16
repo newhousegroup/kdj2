@@ -5,9 +5,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const srcDir = resolve(root, "src");
+const launcherArg = process.argv[2] || null;
+const patchArg = process.argv[3] || null;
 
 async function resolveActiveLauncher() {
-  if (process.argv[2]) return resolve(root, process.argv[2]);
+  if (launcherArg) return resolve(root, launcherArg);
   const html = await readFile(resolve(root, "index.html"), "utf8");
   const matches = [...html.matchAll(/<script[^>]+type=["']module["'][^>]+src=["']([^"']+)["']/g)];
   if (!matches.length) throw new Error("No module launcher found in index.html");
@@ -59,7 +61,7 @@ async function runCapture(source, stageName) {
 
 const launcherPath = await resolveActiveLauncher();
 let source = await readFile(launcherPath, "utf8");
-console.log(`Verifying active launcher: ${launcherPath.slice(root.length + 1)}`);
+console.log(`Verifying launcher: ${launcherPath.slice(root.length + 1)}`);
 
 let depth = 0;
 while (isGeneratedLoader(source)) {
@@ -69,8 +71,16 @@ while (isGeneratedLoader(source)) {
   console.log(`Materialized loader stage ${depth} (${source.length} bytes)`);
 }
 
-const finalSource = source;
-if (depth === 0) throw new Error("Active module did not contain a generated loader");
+if (depth === 0) throw new Error("Launcher did not contain a generated loader");
+
+let finalSource = source;
+if (patchArg) {
+  const patchPath = resolve(root, patchArg);
+  const patchModule = await import(pathToFileURL(patchPath).href + `?verify=${Date.now()}`);
+  if (typeof patchModule.patchGameSource !== "function") throw new Error(`${patchArg} does not export patchGameSource()`);
+  finalSource = patchModule.patchGameSource(finalSource);
+  console.log(`Applied final source patch: ${patchArg} (${finalSource.length} bytes)`);
+}
 
 for (const required of [
   "ui.create.onclick = createBattle;",
@@ -94,4 +104,4 @@ try {
   await unlink(finalPath).catch(() => {});
 }
 
-console.log(`Generated game syntax OK (${finalSource.length} bytes, ${depth} loader stages).`);
+console.log(`Generated game syntax OK (${finalSource.length} bytes, ${depth} loader stages${patchArg ? ", patched" : ""}).`);
