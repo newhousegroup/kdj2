@@ -1,8 +1,16 @@
 # Kill das James 2
 
-**Version 0.14.0**
+**Version 0.14.2**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.14.2 emergency online-members isolation
+
+- Removes the complete 0.14.1 online-members feature from the active build after live testing showed the camera could still become nonfunctional.
+- The **Players** button, members panel, roster renderer, roster refresh loop, and all related DOM updates are absent from the active source chain.
+- The active gameplay/render base remains the stable pre-0.13 **0.12.1 camera and gameplay path**.
+- Retains the three isolated HUD improvements: the five-second battle-intro objective, authoritative British/French team badge, and own-ship information positioned below HP/speed on the right.
+- No water-state, grappling-risk, movement, player-rendering, or camera changes are included.
 
 ## 0.14.0 emergency camera recovery
 
