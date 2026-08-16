@@ -1,37 +1,35 @@
 # Kill das James 2
 
-**Version 0.9.1**
+**Version 0.9.2**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.9.1 helm repair and speed HUD
+## 0.9.2 startup repair
 
-Version 0.9.1 is a focused stability and handling patch on top of 0.9.0.
+Version 0.9.2 repairs the 0.9.1 startup regression without changing the intended 0.9.1 gameplay tuning.
 
-- Helm steering is rebuilt as one coherent host-authoritative control block instead of layered piecemeal throttle patches.
-- **A / D steering works continuously while a captain is at the helm**, scales smoothly with current boat speed, and preserves reversed rudder behavior while moving backward.
-- W/S still incrementally changes the ship's current speed instead of commanding an immediate target throttle.
-- Ships continue to retain momentum after the captain leaves the helm and gradually lose speed from passive drag.
-- A new floating **speed indicator** sits directly below the personal HP bar and shows the current speed of the local player's own ship. Reverse movement is marked `REV`.
-- Cannon cooldown is reduced from 10 seconds to **8 seconds per individual cannon**.
+- 0.9.1 contained an unescaped template literal inside its generated patch bundle. That produced a JavaScript `SyntaxError` before the game could attach the Create/Join handlers.
+- 0.9.2 removes the broken cosmetic captain-hint source patch before loading the 0.9.1 gameplay changes.
+- The actual generated game module is now verified in GitHub Actions rather than only syntax-checking the small launcher file.
+- The verifier recursively materializes every runtime loader stage and runs `node --check` against the final generated game source.
+- The repaired generated module retains the 0.9.1 steering changes, speed HUD, 8-second cannon cooldown, health/swords, five-second flag capture, sails, compass, and persistent-room battle flow.
+
+## 0.9.1 handling and speed HUD retained
+
+- Helm steering uses host-authoritative A/D input and scales smoothly with current boat speed.
+- W/S incrementally changes the ship's current speed rather than commanding an immediate target throttle.
+- Ships retain momentum after the captain leaves the helm and gradually lose speed from passive drag.
+- A floating **speed indicator** sits directly below the personal HP bar and shows the current speed of the local player's own ship. Reverse movement is marked `REV`.
+- Cannon cooldown is **8 seconds per individual cannon**.
 - Cannon mobility damage remains a host-authoritative random **4–9 percentage points** per hit.
-- The 0.9.1 game launcher is rebuilt directly from the stable 0.7 cannon launcher, retaining the health, swords, five-second flag capture, sail management, compass, and persistent-room systems without depending on the fragile 0.8/0.9 loader chain.
 
-## 0.9.0 combat and helm refinement retained
-
-- The personal HP bar floats in the upper-right area beneath the top bar.
-- Capturing the enemy flag requires holding the interact control continuously for **5 seconds** while remaining in capture range.
-- Releasing the control or moving away resets capture progress.
-- The capture prompt shows the remaining hold time while a capture is in progress.
-- Sword attacks select the **nearest valid enemy** within 2.5 local world units and a **±30° cone** in front of the attacker.
-- Friendly fire is disabled.
-
-## Player health and swords
+## Combat and capture
 
 - Every player begins a battle with **100 HP**.
-- Sword hits remove 25 HP.
-- At 0 HP, a player is out for the rest of that battle, cannot move or interact, and waits in a spectator view.
-- The next battle automatically revives all connected players at full health on their own team's ship.
+- Sword hits remove 25 HP and target the nearest valid enemy within 2.5 local world units and a **±30° cone** in front of the attacker.
+- Friendly fire is disabled.
+- At 0 HP, a player is out for the rest of that battle and returns at full health next round.
+- Capturing the enemy flag requires holding the interact control continuously for **5 seconds** while remaining in capture range.
 
 ## Cannons
 
@@ -40,23 +38,15 @@ Version 0.9.1 is a focused stability and handling patch on top of 0.9.0.
 - Each cannon has an **8-second cooldown**.
 - Successful cannon hits remove a host-authoritative random **4–9 percentage points** of enemy ship mobility.
 - Ship mobility cannot fall below 25%.
-- Cannon projectiles, hits, occupation, and damage are host-authoritative and synchronized to the room.
 
-## Sailing
+## Sailing and battle flow
 
 - Ships begin 300 world units apart.
 - Sail state has three levels: **Reefed**, **Cruising**, and **Full**.
 - Full drops to Cruising after about 20 seconds; Cruising drops to Reefed after another 20 seconds.
-- Manually changing the sail level restarts that timer.
-- Sail meshes visibly open and reef with the selected state.
 - Captains receive a top-center heading compass while at the helm.
-
-## Battle flow
-
 - One four-color room can host repeated battles without reconnecting players.
-- Capturing the opposing flag ends the current battle.
-- The room waits **6 seconds** and then automatically starts the next battle.
-- Ships, mobility, stations, projectiles, player health, and positions reset while team assignments and network connections remain.
+- Capturing the opposing flag ends the current battle; the room waits **6 seconds** and automatically starts the next battle.
 
 ## Core controls
 
@@ -72,15 +62,7 @@ Version 0.9.1 is a focused stability and handling patch on top of 0.9.0.
 
 ## Multiplayer model
 
-Kill das James 2 uses:
-
-- Up to six players per room.
-- Locked British/French team assignment for the lifetime of a room connection.
-- Four-color room codes using Coral, Peach, Yellow, Turquoise, Blue, and Purple.
-- PeerJS Cloud signaling.
-- WebRTC DataChannels for realtime room/game traffic.
-- Cloudflare TURN fallback.
-- Host-authoritative ship movement, collision, crew stations, sails, cannon combat, sword combat, health, flag capture, cooldowns, and battle resets.
+Kill das James 2 uses PeerJS Cloud signaling, WebRTC DataChannels, Cloudflare TURN fallback, locked British/French team assignments, and host-authoritative movement/combat/battle state.
 
 ## Netlify / TURN
 
