@@ -8,8 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=0.7.1">
-  <link rel="stylesheet" href="hud-0.6.css?v=0.7.1">
+  <link rel="stylesheet" href="styles.css?v=0.8.0">
+  <link rel="stylesheet" href="hud-0.6.css?v=0.8.0">
+  <link rel="stylesheet" href="combat-0.8.css?v=0.8.0">
 </head>
 <body>
   <div id="gameRoot">
@@ -37,7 +38,7 @@
         </div>
 
         <p id="lobbyStatus" class="status"></p>
-        <span class="version">0.7.1</span>
+        <span class="version">0.8.0</span>
       </div>
     </section>
 
@@ -56,6 +57,10 @@
         <div class="game-title">Kill das James 2 <span id="connectionDot" class="connection-dot ready" title="Ready"></span></div>
         <div class="room-meta">
           <span id="teamBadge" class="team-badge">British</span>
+          <div id="healthHud" class="health-hud" aria-label="Health 100 of 100">
+            <div class="health-track" aria-hidden="true"><div id="healthFill" class="health-fill"></div></div>
+            <span id="healthText" class="health-text">100 HP</span>
+          </div>
           <div id="currentRoomCode" class="room-code compact"></div>
           <span id="peopleCount">1 / 6</span>
           <button id="settingsBtn" class="hud-button">Settings</button>
@@ -100,13 +105,17 @@
       <div id="interactionPrompt" class="interaction-prompt hidden"></div>
       <div id="toast" class="toast hidden"></div>
       <div id="crosshair" class="crosshair" aria-hidden="true"></div>
+      <div id="deathNotice" class="death-notice hidden" role="status">
+        <strong>You are out</strong>
+        <span>Wait for the next battle to rejoin your crew.</span>
+      </div>
 
       <div class="controls-help">
         <span>WASD move</span>
         <span>Mouse look</span>
         <span>E interact</span>
         <span>G board</span>
-        <span>Space sails / fire</span>
+        <span>Space sword / sails / fire</span>
       </div>
 
       <div id="touchControls" class="touch-controls">
@@ -114,6 +123,7 @@
         <div class="touch-actions">
           <button id="touchInteract">E</button>
           <button id="touchGrapple">G</button>
+          <button id="touchSword" class="boost">SWORD</button>
           <button id="touchRigging" class="boost hidden">SAILS</button>
           <button id="touchFire" class="boost hidden">FIRE</button>
         </div>
@@ -155,8 +165,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-  <script src="version.js?v=0.7.1"></script>
-  <script src="src/network.js?v=0.7.1"></script>
-  <script type="module" src="src/game-0.7.1.js?v=0.7.1"></script>
+  <script src="version.js?v=0.8.0"></script>
+  <script src="src/network.js?v=0.8.0"></script>
+  <script type="module" src="src/game-0.8.0-fixed.js?v=0.8.0"></script>
 </body>
 </html>
