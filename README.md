@@ -1,42 +1,42 @@
 # Kill das James 2
 
-**Version 0.10.0**
+**Version 0.11.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
+## 0.11.0 navigation and world-detail pass
+
+- The 0–35 ship-speed HUD now displays **whole numbers only** so small physical changes do not make the readout flicker rapidly between decimal values.
+- The world now contains exactly **one fixed island**. Unlike the camera-following ocean/sky shell, the island stays at a permanent world coordinate and provides a visual reference for heading and movement.
+- The captain compass now includes an **enemy-bearing line** rendered in the opposing team's color. Bearings inside the compass range show their true position; off-ribbon enemies pin to the appropriate faded edge until the captain turns toward them.
+- The lower deck has a much denser environment: visible plank flooring, structural beams and posts, wall rails, stacked bunks, shelving, crates, rope coils, a hatch ladder, benches, and metal braces while preserving the central movement route.
+- A visible sun disc and soft halo now track the camera at the same direction as the existing sunlight/sky glow, so the directional lighting has a clear visual source.
+- The 0.10.0 helm spacing, locked captain body orientation, ship-detail pass, endless atmospheric shell, and all existing multiplayer/combat systems are retained.
+
 ## 0.10.0 immersion and ship-detail pass
 
-- Helm occupation now places the sailor behind the wheel with physical spacing instead of clipping the character into the helm.
+- Helm occupation places the sailor behind the wheel with physical spacing instead of clipping the character into the helm.
 - A captain's body remains aligned with the helm/ship while camera look stays free, so the player can look around without rotating the entire sailor model.
-- Ships receive a substantial procedural detail pass: helm pedestal, bowsprit and standing rigging, crow's nest, hull fittings, metal rings, mooring cleats, rope coils, stern trim, lanterns, and deck grating.
-- Ocean, sky, and cloud shells follow the camera horizontally so normal sailing can no longer expose a black rendering void at the technical edge of the scene.
-- The project now includes DESIGN_DIRECTION.md as the visual north star for future work: grounded proportions, layered construction, believable materials, atmospheric depth, cinematic motion, and strong browser/mobile performance.
-- All 0.9.3 gameplay systems are retained.
+- Ships include a procedural detail pass: helm pedestal, bowsprit and standing rigging, crow's nest, hull fittings, metal rings, mooring cleats, rope coils, stern trim, lanterns, and deck grating.
+- Ocean, sky, and cloud shells follow the camera horizontally so normal sailing does not expose a black rendering void at the technical edge of the scene.
+- `DESIGN_DIRECTION.md` is the visual north star for future work: grounded proportions, layered construction, believable materials, atmospheric depth, cinematic motion, and strong browser/mobile performance.
 
 ## 0.9.3 speed stability
 
-Version 0.9.3 fixes a speed-control edge case and changes the HUD speed readout to a normalized 0–35 scale.
-
 - W no longer snaps the ship downward when sail decay or cannon damage lowers the current allowed maximum speed while the ship is still coasting faster than that new cap.
-- W accelerates only while the ship is below its current forward cap; excess momentum now bleeds away naturally through drag.
+- W accelerates only while the ship is below its current forward cap; excess momentum bleeds away naturally through drag.
 - S similarly reduces speed without forcing invalid jumps around the reverse-speed cap.
 - The host repairs any non-finite ship-speed state back to zero as an additional safety guard.
-- The HUD no longer exposes raw world-units-per-second values. Full undamaged Full-sail speed maps to **35** on the displayed scale, with intermediate physical speeds scaled proportionally from 0 to 35.
+- The HUD maps physical speed onto a normalized **0–35** display scale; 0.11.0 renders that scale as integers.
 - Reverse movement continues to be marked `REV`.
-- The generated-game CI verifier is retained and validates all nested loader stages plus the final generated module.
-
-## 0.9.2 startup repair retained
-
-- The 0.9.1 generated-loader syntax regression remains repaired.
-- The actual generated game module is verified in GitHub Actions rather than only syntax-checking the small launcher file.
-- The verifier recursively materializes every runtime loader stage and runs `node --check` against the final generated game source.
 
 ## Handling and HUD
 
 - Helm steering uses host-authoritative A/D input and scales smoothly with current boat speed.
 - W/S incrementally changes the ship's current speed rather than commanding an immediate target throttle.
 - Ships retain momentum after the captain leaves the helm and gradually lose speed from passive drag.
-- A floating **speed indicator** sits directly below the personal HP bar and uses the 0–35 display scale.
+- A floating **speed indicator** sits directly below the personal HP bar.
+- Captains receive a top-center heading compass with an enemy-bearing indicator.
 - Cannon cooldown is **8 seconds per individual cannon**.
 - Cannon mobility damage remains a host-authoritative random **4–9 percentage points** per hit.
 
@@ -61,7 +61,6 @@ Version 0.9.3 fixes a speed-control edge case and changes the HUD speed readout 
 - Ships begin 300 world units apart.
 - Sail state has three levels: **Reefed**, **Cruising**, and **Full**.
 - Full drops to Cruising after about 20 seconds; Cruising drops to Reefed after another 20 seconds.
-- Captains receive a top-center heading compass while at the helm.
 - One four-color room can host repeated battles without reconnecting players.
 - Capturing the opposing flag ends the current battle; the room waits **6 seconds** and automatically starts the next battle.
 
