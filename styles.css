@@ -72,7 +72,7 @@ input:focus { border-color: #687b8a; }
 .joystick-knob { position: absolute; left: 50%; top: 50%; width: 48px; height: 48px; transform: translate(-50%, -50%); border-radius: 50%; background: rgba(255,255,255,.72); }
 .touch-actions { position: absolute; right: 18px; bottom: 22px; display: grid; grid-template-columns: repeat(2, 58px); gap: 9px; pointer-events: auto; }
 .touch-actions button { height: 52px; border: 1px solid rgba(255,255,255,.18); border-radius: 14px; background: rgba(5,12,18,.66); color: white; font-weight: 800; }
-.touch-actions .fire { grid-column: 1 / -1; height: 58px; background: rgba(126,46,41,.7); }
+.touch-actions .boost { grid-column: 1 / -1; height: 58px; background: rgba(47,85,109,.72); }
 @media (hover: none), (pointer: coarse) {
   .touch-controls { display: block; }
   .controls-help { display: none; }
