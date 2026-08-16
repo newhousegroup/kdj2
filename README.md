@@ -1,8 +1,16 @@
 # Kill das James 2
 
-**Version 0.11.1**
+**Version 0.11.2**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.11.2 island collision and helm consistency
+
+- The single reference island is now a host-authoritative physical obstacle for ships.
+- Island collision uses the ship's oriented hull footprint against the island shoreline instead of a crude oversized centre-point radius.
+- A ship that reaches the island is stopped at the shoreline and cannot sail through the terrain.
+- Helm left/right no longer reverses when ship speed becomes negative. Joystick-left and A always command the same bow-turn direction; joystick-right and D always command the opposite direction, regardless of forward/reverse momentum.
+- Reefed sail power remains 50%, and all 0.11.1 navigation-coordinate corrections are retained.
 
 ## 0.11.1 navigation correction
 
