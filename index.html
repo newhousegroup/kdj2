@@ -8,7 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=0.5.3">
+  <link rel="stylesheet" href="styles.css?v=0.6.0">
+  <link rel="stylesheet" href="hud-0.6.css?v=0.6.0">
 </head>
 <body>
   <div id="gameRoot">
@@ -36,7 +37,7 @@
         </div>
 
         <p id="lobbyStatus" class="status"></p>
-        <span class="version">0.5.3</span>
+        <span class="version">0.6.0</span>
       </div>
     </section>
 
@@ -61,6 +62,28 @@
           <button id="leaveBtn" class="hud-button">Leave</button>
         </div>
       </header>
+
+      <div id="captainCompass" class="captain-compass hidden" aria-label="Ship heading compass">
+        <div class="compass-scale">
+          <span class="compass-mark major" data-bearing="0">N</span>
+          <span class="compass-mark minor" data-bearing="22.5"></span>
+          <span class="compass-mark major" data-bearing="45">NE</span>
+          <span class="compass-mark minor" data-bearing="67.5"></span>
+          <span class="compass-mark major" data-bearing="90">E</span>
+          <span class="compass-mark minor" data-bearing="112.5"></span>
+          <span class="compass-mark major" data-bearing="135">SE</span>
+          <span class="compass-mark minor" data-bearing="157.5"></span>
+          <span class="compass-mark major" data-bearing="180">S</span>
+          <span class="compass-mark minor" data-bearing="202.5"></span>
+          <span class="compass-mark major" data-bearing="225">SW</span>
+          <span class="compass-mark minor" data-bearing="247.5"></span>
+          <span class="compass-mark major" data-bearing="270">W</span>
+          <span class="compass-mark minor" data-bearing="292.5"></span>
+          <span class="compass-mark major" data-bearing="315">NW</span>
+          <span class="compass-mark minor" data-bearing="337.5"></span>
+        </div>
+        <span class="compass-center" aria-hidden="true"></span>
+      </div>
 
       <div class="ship-panels">
         <div class="ship-panel british">
@@ -125,14 +148,14 @@
         <p class="eyebrow">Battle over</p>
         <h1 id="victoryTitle">British victory</h1>
         <p id="victoryText">The French flag was captured.</p>
-        <p id="resetCountdown" class="ship-name">Next battle in 10s</p>
+        <p id="resetCountdown" class="ship-name">Next battle in 6s</p>
       </div>
     </section>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-  <script src="version.js?v=0.5.3"></script>
-  <script src="src/network.js?v=0.5.3"></script>
-  <script type="module" src="src/game-0.5.3.js?v=0.5.3"></script>
+  <script src="version.js?v=0.6.0"></script>
+  <script src="src/network.js?v=0.6.0"></script>
+  <script type="module" src="src/game-0.6.0.js?v=0.6.0"></script>
 </body>
 </html>
