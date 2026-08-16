@@ -1,31 +1,39 @@
 # Kill das James 2
 
-**Version 0.6.2**
+**Version 0.7.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.6.2 startup stabilization
+## 0.7.0 cannons
 
-Version 0.6.2 replaces the fragile nested runtime patch chain used by 0.6.0 and 0.6.1.
+Version 0.7.0 adds the first arcade cannon-combat system.
 
-- The game now loads the known-good 0.5.0 game module once and applies the retained 0.5.1–0.6.0 changes directly in one startup layer.
-- It no longer executes 0.6.0 → 0.5.2 → 0.5.0 nested generated modules.
-- The new launcher was syntax-checked before being committed.
-- Startup failures now write a visible `Game failed to load: ...` message to the lobby instead of leaving Create/Join buttons silently unresponsive.
-- The 0.6.0 HUD, compass, movement, sail, spacing, and six-second rematch behavior are retained.
+- Each ship has four usable deck cannons: fore/aft positions on both port and starboard sides.
+- Walk near a cannon and press **E** to man it. A cannon can only have one gunner at a time.
+- While serving as gunner, **A / D** adjusts the cannon within a limited broadside firing arc.
+- **Space** fires on desktop. Touch devices show a dedicated **FIRE** button only while the player is manning a cannon.
+- Cannons have a short cooldown between shots.
+- Cannon projectiles are visible and synchronized through the existing room state.
+- The host authoritatively simulates projectile movement and decides hits.
+- A hit reduces the opposing ship's mobility by 12 percentage points, down to a 25% minimum. Existing ship movement already scales with mobility, so damaged ships accelerate, steer, and travel more slowly.
+- Cannon range is intentionally shorter than the 300-unit starting separation, requiring both crews to close distance before firing becomes useful.
+- The captain may leave the helm and take a cannon like any other sailor; while nobody is at the helm, the ship naturally slows/stops as before.
+- Cannon occupation and projectiles are cleared between battles while the room itself remains connected.
 
-## 0.6.0 HUD and handling refinement retained
+The cannon system is intentionally arcade-like rather than a realistic weapon simulation.
+
+## Retained 0.6.x HUD and handling
 
 - The ship-status HUD displays only the local player's own team/ship.
-- Player movement is 120% of the 0.5.1 pace: upper deck speed is 4.98 and lower-deck speed is 4.02 world units per second.
-- Ship movement is 90% of the 0.5.1 tuning: full-sail target speed is 6.03, with acceleration/deceleration scaled down proportionally.
+- Player movement is upper deck 4.98 and lower deck 4.02 world units per second.
+- Full-sail ship target speed is 6.03, with mobility and sail state scaling it further.
 - Battle restart cooldown is 6 seconds while keeping the same persistent room and locked teams.
 - Captains receive a top-center heading compass while occupying the helm.
 - The compass follows the ship's actual heading rather than camera/look direction.
 - The ribbon contains N, NE, E, SE, S, SW, W, and NW marks with intermediate ticks, a fixed center index, and faded outer edges.
-- The compass displays ±62.5° around the current course.
+- Startup failures write a visible `Game failed to load: ...` message to the lobby instead of leaving Create/Join silently unresponsive.
 
-## Sail management retained
+## Sail management
 
 - Sail state has three levels: **Reefed**, **Cruising**, and **Full**.
 - A ship automatically drops one sail level after about 20 seconds.
@@ -54,6 +62,7 @@ Version 0.6.2 replaces the fragile nested runtime patch chain used by 0.6.0 and 
 - Joining leads to an assigned-crew deployment screen and a **Spawn on ship** button.
 - Each ship has a helm. A player must take the captain role for that ship to move; without a captain the ship returns to a stop.
 - A second crew member can take the rigging station and control the sail setting.
+- Crew members can man individual cannons and damage enemy mobility.
 - Players can cross to the other ship when the ships are close enough.
 - Each ship has an upper deck, hatch, and enclosed lower deck.
 - Each team's flag is below deck. Players cannot capture their own flag; capturing the opposing flag wins the current battle.
@@ -66,9 +75,10 @@ Version 0.6.2 replaces the fragile nested runtime patch chain used by 0.6.0 and 
 - **Touch drag** — look around on mobile/tablet.
 - **Pinch in third person** — change third-person camera distance; pinch inward to zoom out.
 - **Mouse wheel in third person** — change camera distance on desktop.
-- **E** — interact with helm, rigging, hatch, or flag; also leave a station.
+- **E** — interact with helm, rigging, cannon, hatch, or flag; also leave a station.
 - **G** — cross to the other ship when it is close enough.
-- **Space / SAILS** — cycle Reefed → Cruising → Full while serving as sailmaster.
+- **Space / SAILS** — change sail setting while serving as sailmaster.
+- **A / D + Space / FIRE** — aim and fire while serving as gunner.
 
 ## Multiplayer model
 
@@ -78,7 +88,7 @@ Kill das James 2 uses:
 - PeerJS Cloud for signaling.
 - WebRTC DataChannels for realtime game traffic.
 - Cloudflare TURN fallback for cross-network reliability.
-- Host-authoritative team assignment, ship movement, collision, crew roles, crossing, sail state/decay, flag victory, cooldown, and battle resets.
+- Host-authoritative team assignment, ship movement, collision, crew roles, cannon shots/hits, crossing, sail state/decay, flag victory, cooldown, and battle resets.
 
 ## Netlify / TURN
 
