@@ -1,21 +1,28 @@
 # Kill das James 2
 
-**Version 0.6.0**
+**Version 0.6.1**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.6.0 HUD and handling refinement
+## 0.6.1 startup repair
 
-Version 0.6.0 focuses on information density, movement balance, faster rematches, and captain navigation.
+Version 0.6.1 fixes a JavaScript startup regression introduced by 0.6.0.
 
-- The ship-status HUD now displays only the local player's own team/ship. Opponent mobility and sail state are no longer shown.
+- 0.6.0 generated an additional layer of JavaScript for the HUD/compass changes.
+- Newline escapes inside that generated patch were escaped one level too deeply, so patch targets looked for literal `\n` text instead of real line breaks.
+- The generated module therefore threw during startup before the lobby button handlers were attached, making both **Create battle** and **Join battle** appear unresponsive.
+- 0.6.1 repairs the generated patch before execution and preserves the 0.6.0 gameplay/HUD changes.
+
+## 0.6.0 HUD and handling refinement retained
+
+- The ship-status HUD displays only the local player's own team/ship.
 - Player movement is 120% of the 0.5.3 pace: upper deck speed is 4.98 and lower-deck speed is 4.02 world units per second.
-- Ship movement is 90% of the 0.5.3 tuning: full-sail target speed is reduced from 6.7 to 6.03, with acceleration/deceleration scaled down proportionally.
-- Battle restart cooldown is reduced from 10 seconds to 6 seconds while keeping the same persistent room and locked teams.
-- Captains now receive a top-center heading compass while occupying the helm.
-- The compass follows the ship's actual heading rather than the captain's camera/look direction.
-- The heading ribbon contains N, NE, E, SE, S, SW, W, and NW marks with intermediate ticks, a fixed center index, and faded outer edges.
-- The compass displays roughly the requested field around the current course, using ±62.5° from center.
+- Ship movement is 90% of the 0.5.3 tuning: full-sail target speed is 6.03, with acceleration/deceleration scaled down proportionally.
+- Battle restart cooldown is 6 seconds while keeping the same persistent room and locked teams.
+- Captains receive a top-center heading compass while occupying the helm.
+- The compass follows the ship's actual heading rather than camera/look direction.
+- The ribbon contains N, NE, E, SE, S, SW, W, and NW marks with intermediate ticks, a fixed center index, and faded outer edges.
+- The compass displays ±62.5° around the current course.
 
 ## Sail management retained
 
