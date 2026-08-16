@@ -1,38 +1,42 @@
 # Kill das James 2
 
-**Version 0.5.3**
+**Version 0.6.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.5.3 automatic sail decay
+## 0.6.0 HUD and handling refinement
 
-Version 0.5.3 adds timed sail management on top of the persistent three-stage sail control introduced in 0.5.2.
+Version 0.6.0 focuses on information density, movement balance, faster rematches, and captain navigation.
 
-- Sail state still has three levels: **Reefed**, **Cruising**, and **Full**.
+- The ship-status HUD now displays only the local player's own team/ship. Opponent mobility and sail state are no longer shown.
+- Player movement is 120% of the 0.5.3 pace: upper deck speed is 4.98 and lower-deck speed is 4.02 world units per second.
+- Ship movement is 90% of the 0.5.3 tuning: full-sail target speed is reduced from 6.7 to 6.03, with acceleration/deceleration scaled down proportionally.
+- Battle restart cooldown is reduced from 10 seconds to 6 seconds while keeping the same persistent room and locked teams.
+- Captains now receive a top-center heading compass while occupying the helm.
+- The compass follows the ship's actual heading rather than the captain's camera/look direction.
+- The heading ribbon contains N, NE, E, SE, S, SW, W, and NW marks with intermediate ticks, a fixed center index, and faded outer edges.
+- The compass displays roughly the requested field around the current course, using ±62.5° from center.
+
+## Sail management retained
+
+- Sail state has three levels: **Reefed**, **Cruising**, and **Full**.
 - A ship automatically drops one sail level after about 20 seconds.
 - **Full → Cruising** after about 20 seconds, then **Cruising → Reefed** after another about 20 seconds.
 - **Reefed** is the minimum and does not decay further.
 - Whenever the sailmaster manually changes the sail setting, the 20-second timer restarts from the newly selected level.
-- New battles still begin at **Cruising**, with the first decay timer beginning immediately at round start.
-- Sail decay is host-authoritative, so the timer continues correctly even if the sailmaster leaves the station or disconnects.
-
-## 0.5.2 sail control and battle spacing retained
-
-- The two ships begin 300 world units apart: British at x = -150 and French at x = +150, five times the original starting separation.
-- The sailmaster cycles **Reefed → Cruising → Full** using Space / SAILS.
+- New battles begin at **Cruising**.
 - Reefed sails provide 55% sail power, Cruising provides 78%, and Full provides 100%.
 - Sail meshes visibly reef/open as the synchronized sail state changes.
-- HUD ship panels show each ship's current sail state.
 
-## Other retained improvements
+## Battle spacing and retained improvements
 
+- The two ships begin 300 world units apart: British at x = -150 and French at x = +150.
 - The hatch-area sail is a compact raised square sail on its own mast/yardarms.
 - Sailors use two simple dark eye dots directly on the head.
-- Player walking and limb animation are slowed to better match the ship scale.
-- Ship top speed and acceleration are reduced.
+- Players have articulated walking animation.
 - Third-person supports pinch zoom on touch and mouse-wheel zoom on desktop.
 - Deck-edge movement slides along the boundary instead of locking the player.
-- One four-color room can host repeated battles with a 10-second reset while keeping the same room and locked teams.
+- One four-color room can host repeated battles while keeping the same connections and locked teams.
 
 ## Core game loop
 
