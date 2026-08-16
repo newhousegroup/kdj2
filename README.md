@@ -1,8 +1,15 @@
 # Kill das James 2
 
-**Version 0.12.0**
+**Version 0.12.1**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.12.1 polish update
+
+- Network setup copy now reads **Connecting...** instead of **Connecting**.
+- The mobile/touch look hint was removed from the in-game HUD so it no longer overlaps gameplay on smaller screens. It now appears only on the join panel before entering a battle.
+- The visible sun now has a layered premium treatment: bright core, additive corona, broad haze, radial starburst rays, and soft glare aligned with the same world-space direction as the existing sunlight.
+- All 0.12.0 uniform, island, national-flag, steering, collision, combat, cannon, compass, and multiplayer behavior is retained.
 
 ## 0.12.0 details update
 
