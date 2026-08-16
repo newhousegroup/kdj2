@@ -4,6 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const srcDir = resolve(root, "src");
 
 async function resolveActiveLauncher() {
   if (process.argv[2]) return resolve(root, process.argv[2]);
@@ -11,6 +12,10 @@ async function resolveActiveLauncher() {
   const matches = [...html.matchAll(/<script[^>]+type=["']module["'][^>]+src=["']([^"']+)["']/g)];
   if (!matches.length) throw new Error("No module launcher found in index.html");
   return resolve(root, matches.at(-1)[1].split("?")[0]);
+}
+
+function isGeneratedLoader(source) {
+  return source.includes('URL.createObjectURL(new Blob([source], { type: "text/javascript" }))');
 }
 
 function captureInsteadOfImport(source, label) {
@@ -38,13 +43,13 @@ async function localFetch(input) {
 globalThis.fetch = localFetch;
 globalThis.document = { querySelector: () => null };
 
-async function runCapture(source, sourcePath, stageName) {
+async function runCapture(source, stageName) {
   const transformed = captureInsteadOfImport(source, stageName);
-  const tempPath = resolve(dirname(sourcePath), `.verify-${stageName}-${Date.now()}-${Math.random().toString(36).slice(2)}.mjs`);
+  const tempPath = resolve(srcDir, `.verify-${stageName}-${Date.now()}-${Math.random().toString(36).slice(2)}.mjs`);
   await writeFile(tempPath, transformed, "utf8");
   globalThis.__KDJ_CAPTURED_SOURCE = undefined;
   try {
-    await import(pathToFileURL(tempPath).href + `?verify=${Date.now()}`);
+    await import(pathToFileURL(tempPath).href + `?verify=${Date.now()}-${Math.random()}`);
   } finally {
     await unlink(tempPath).catch(() => {});
   }
@@ -53,13 +58,26 @@ async function runCapture(source, sourcePath, stageName) {
 }
 
 const launcherPath = await resolveActiveLauncher();
-const launcherSource = await readFile(launcherPath, "utf8");
+let source = await readFile(launcherPath, "utf8");
 console.log(`Verifying active launcher: ${launcherPath.slice(root.length + 1)}`);
 
-const stage2Source = await runCapture(launcherSource, launcherPath, "release-launcher");
-const finalSource = await runCapture(stage2Source, resolve(root, "src/game-0.7.0.js"), "cannon-launcher");
+let depth = 0;
+while (isGeneratedLoader(source)) {
+  depth += 1;
+  if (depth > 6) throw new Error("Generated loader nesting exceeded six stages");
+  source = await runCapture(source, `stage-${depth}`);
+  console.log(`Materialized loader stage ${depth} (${source.length} bytes)`);
+}
 
-for (const required of ["ui.create.onclick = createBattle;", "ui.join.onclick = joinBattle;", "function simulateShips(dt)", "function handleCannonFire(p)"]) {
+const finalSource = source;
+if (depth === 0) throw new Error("Active module did not contain a generated loader");
+
+for (const required of [
+  "ui.create.onclick = createBattle;",
+  "ui.join.onclick = joinBattle;",
+  "function simulateShips(dt)",
+  "function handleCannonFire(p)"
+]) {
   if (!finalSource.includes(required)) throw new Error(`Final game source missing required marker: ${required}`);
 }
 
@@ -76,4 +94,4 @@ try {
   await unlink(finalPath).catch(() => {});
 }
 
-console.log(`Generated game syntax OK (${finalSource.length} bytes).`);
+console.log(`Generated game syntax OK (${finalSource.length} bytes, ${depth} loader stages).`);
