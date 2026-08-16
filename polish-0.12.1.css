@@ -1,0 +1,12 @@
+.join-look-hint {
+  display: none;
+  margin: 5px 0 0;
+  text-align: center;
+  color: #7f8d98;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .join-look-hint { display: block; }
+}
