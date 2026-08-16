@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=0.6.2">
-  <link rel="stylesheet" href="hud-0.6.css?v=0.6.2">
+  <link rel="stylesheet" href="styles.css?v=0.7.0">
+  <link rel="stylesheet" href="hud-0.6.css?v=0.7.0">
 </head>
 <body>
   <div id="gameRoot">
@@ -37,7 +37,7 @@
         </div>
 
         <p id="lobbyStatus" class="status"></p>
-        <span class="version">0.6.2</span>
+        <span class="version">0.7.0</span>
       </div>
     </section>
 
@@ -106,7 +106,7 @@
         <span>Mouse look</span>
         <span>E interact</span>
         <span>G board</span>
-        <span>Space sails</span>
+        <span>Space sails / fire</span>
       </div>
 
       <div id="touchControls" class="touch-controls">
@@ -115,6 +115,7 @@
           <button id="touchInteract">E</button>
           <button id="touchGrapple">G</button>
           <button id="touchRigging" class="boost hidden">SAILS</button>
+          <button id="touchFire" class="boost hidden">FIRE</button>
         </div>
         <span class="touch-look-hint">Drag to look · pinch in third person to zoom</span>
       </div>
@@ -154,8 +155,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-  <script src="version.js?v=0.6.2"></script>
-  <script src="src/network.js?v=0.6.2"></script>
-  <script type="module" src="src/game-0.6.2.js?v=0.6.2"></script>
+  <script src="version.js?v=0.7.0"></script>
+  <script src="src/network.js?v=0.7.0"></script>
+  <script type="module" src="src/game-0.7.0.js?v=0.7.0"></script>
 </body>
 </html>
