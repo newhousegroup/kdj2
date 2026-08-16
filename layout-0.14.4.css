@@ -1,0 +1,14 @@
+.ship-panels {
+  top: calc(env(safe-area-inset-top, 0px) + 154px);
+  right: 22px;
+  left: auto;
+  align-items: end;
+}
+
+@media (max-width: 760px) {
+  .ship-panels {
+    top: calc(env(safe-area-inset-top, 0px) + 138px);
+    right: 12px;
+    left: auto;
+  }
+}
