@@ -1,8 +1,18 @@
 # Kill das James 2
 
-**Version 0.12.1**
+**Version 0.13.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.13.0 battle HUD, online players and grappling risk
+
+- The normal **Battle N · take opponent flag to win** objective is now a five-second round-intro banner. It fades away during ordinary play and reappears automatically at the beginning of every new battle; contextual captain, sailmaster, gunner, enemy-ship, capture and overboard guidance remains available when relevant.
+- The British/French badge in the top HUD is refreshed from the authoritative local-player state every render, fixing hosts/clients that could retain the placeholder team label.
+- The local ship information panel has moved to the upper-right status stack directly below HP and speed.
+- A **Players** button opens a live online-members panel showing every connected sailor, team color, current ship/deck or station, overboard state, and whether they are out for the battle.
+- Normal ship-to-ship grappling has a host-authoritative **20% failure chance**. A failure drops the sailor into a world-space water state rather than teleporting them across.
+- While overboard, normal walking, deck interactions and sword attacks are disabled. Press **G** to grapple back aboard: attempts have a **40% success chance** with a **1.0 second cooldown** between tries. A successful recovery pulls the sailor onto the nearest ship.
+- All 0.12.1 visual/detail work, national flags, premium sun, island collision, combat, sailing and multiplayer behavior are retained.
 
 ## 0.12.1 polish update
 
