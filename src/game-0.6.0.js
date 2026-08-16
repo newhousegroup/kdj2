@@ -39,18 +39,6 @@ patchOnce(
   "automatic sail decay"
 );
 
-// 0.6.0 movement tuning: crew 120% of 0.5.3, ships 90% of 0.5.3.
-patchOnce(
-  '  const speed = p.deck === "lower" ? 3.35 : 4.15;',
-  '  const speed = p.deck === "lower" ? 4.02 : 4.98;',
-  "player speed tuning"
-);
-patchOnce(
-  '    const desired = throttle * 6.7 * boost * mobility;\\n    ship.speed += THREE.MathUtils.clamp(desired - ship.speed, -4.8 * dt, 2.7 * dt);',
-  '    const desired = throttle * 6.03 * boost * mobility;\\n    ship.speed += THREE.MathUtils.clamp(desired - ship.speed, -4.32 * dt, 2.43 * dt);',
-  "ship speed tuning"
-);
-
 // Append 0.6.0 base-game patches after the existing 0.5.2 transformations have run.
 const extraPatches = String.raw`
 
@@ -59,6 +47,18 @@ patch(
   'const RESET_MS = 10000;',
   'const RESET_MS = 6000;',
   "six-second battle reset"
+);
+
+// 0.6.0 movement tuning is applied after sail-power conversion so it cannot break the 0.5.2 patch chain.
+patch(
+  '  const speed = p.deck === "lower" ? 3.35 : 4.15;',
+  '  const speed = p.deck === "lower" ? 4.02 : 4.98;',
+  "player speed tuning"
+);
+patch(
+  '    const desired = throttle * 6.7 * sailPower * mobility;\\n    ship.speed += THREE.MathUtils.clamp(desired - ship.speed, -4.8 * dt, 2.7 * dt);',
+  '    const desired = throttle * 6.03 * sailPower * mobility;\\n    ship.speed += THREE.MathUtils.clamp(desired - ship.speed, -4.32 * dt, 2.43 * dt);',
+  "ship speed tuning"
 );
 
 // Only show the local crew's own ship-status card.
