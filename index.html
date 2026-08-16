@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07111a">
+  <title>Kill das James 2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=0.1.0">
+</head>
+<body>
+  <div id="gameRoot">
+    <canvas id="gameCanvas"></canvas>
+
+    <section id="lobby" class="screen lobby-screen">
+      <div class="lobby-panel">
+        <div class="brand">Kill das James 2</div>
+        <p class="subtitle">Two ships. Two crews. One flag.</p>
+
+        <label for="playerName">Name</label>
+        <input id="playerName" maxlength="20" autocomplete="nickname" placeholder="Your name">
+
+        <div id="lobbyHome" class="stack">
+          <button id="createRoomBtn" class="primary">Create battle</button>
+          <button id="showJoinBtn" class="secondary">Join battle</button>
+        </div>
+
+        <div id="joinPanel" class="stack hidden">
+          <button id="joinBackBtn" class="text-button">← Back</button>
+          <p class="small-heading">Enter room colors</p>
+          <div id="joinCode" class="room-code large"></div>
+          <div id="colorPalette" class="palette"></div>
+          <button id="joinRoomBtn" class="primary" disabled>Join battle</button>
+        </div>
+
+        <p id="lobbyStatus" class="status"></p>
+        <span class="version">0.1.0</span>
+      </div>
+    </section>
+
+    <section id="deployment" class="screen deployment-screen hidden">
+      <div class="deployment-card">
+        <p class="eyebrow">Assigned crew</p>
+        <h1 id="teamName">British</h1>
+        <p id="teamShipName" class="ship-name">HMS Resolute</p>
+        <p class="locked-note">Team assignment is locked for this battle.</p>
+        <button id="spawnBtn" class="primary">Spawn on ship</button>
+      </div>
+    </section>
+
+    <section id="hud" class="hud hidden" aria-live="polite">
+      <header class="topbar">
+        <div class="game-title">Kill das James 2 <span id="connectionDot" class="connection-dot ready" title="Ready"></span></div>
+        <div class="room-meta">
+          <span id="teamBadge" class="team-badge">British</span>
+          <div id="currentRoomCode" class="room-code compact"></div>
+          <span id="peopleCount">1 / 6</span>
+          <button id="leaveBtn" class="hud-button">Leave</button>
+        </div>
+      </header>
+
+      <div class="ship-panels">
+        <div class="ship-panel british">
+          <strong>HMS Resolute</strong>
+          <span id="britishMobility">Mobility 100%</span>
+        </div>
+        <div class="ship-panel french">
+          <strong>Fleur Royale</strong>
+          <span id="frenchMobility">Mobility 100%</span>
+        </div>
+      </div>
+
+      <div id="objective" class="objective">Capture the enemy flag below deck.</div>
+      <div id="interactionPrompt" class="interaction-prompt hidden"></div>
+      <div id="toast" class="toast hidden"></div>
+
+      <div class="controls-help">
+        <span>WASD move</span>
+        <span>E interact</span>
+        <span>G grapple</span>
+        <span>Space fire</span>
+      </div>
+
+      <div id="touchControls" class="touch-controls">
+        <div id="joystick" class="joystick"><div id="joystickKnob" class="joystick-knob"></div></div>
+        <div class="touch-actions">
+          <button id="touchInteract">E</button>
+          <button id="touchGrapple">G</button>
+          <button id="touchFire" class="fire">FIRE</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="victory" class="screen victory-screen hidden">
+      <div class="victory-card">
+        <p class="eyebrow">Battle over</p>
+        <h1 id="victoryTitle">British victory</h1>
+        <p id="victoryText">The French flag was captured.</p>
+        <button id="victoryLeaveBtn" class="primary">Return to menu</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
+  <script src="version.js?v=0.1.0"></script>
+  <script src="src/network.js?v=0.1.0"></script>
+  <script type="module" src="src/game.js?v=0.1.0"></script>
+</body>
+</html>
