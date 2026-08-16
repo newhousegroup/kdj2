@@ -1,20 +1,31 @@
 # Kill das James 2
 
-**Version 0.5.1**
+**Version 0.5.2**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.5.1 visual and speed corrections
+## 0.5.2 sail control and battle spacing
 
-Version 0.5.1 is a patch release over 0.5.0 focused on the issues found during playtesting.
+Version 0.5.2 expands the sailmaster role and gives each battle a much longer approach phase.
 
-- The hatch-area sail has been rebuilt as a compact raised square sail on its own mast/yardarms. It remains just forward of the lower-deck hatch but no longer produces the malformed/intersecting triangular shape seen in 0.5.0.
-- Sailors now use two simple dark eye dots directly on the head instead of white eyeballs, pupils, and a nose.
-- Player walking speed has been reduced on both upper and lower decks.
-- Arm and leg walk animation has been slowed and reduced in amplitude so it matches the new walking pace.
-- Ship top speed and acceleration have both been reduced so the boats feel heavier and give captains more time to maneuver.
+- The two ships now begin 300 world units apart: British at x = -150 and French at x = +150. This is exactly five times the previous 60-unit starting separation.
+- Sail control is no longer a temporary "speed boost active" action.
+- The sailmaster cycles the ship through three persistent sail states: **Reefed**, **Cruising**, and **Full**.
+- Sail state remains selected until a sailmaster changes it again and resets to **Cruising** at the beginning of each new battle.
+- Reefed sails provide 55% sail power, Cruising provides 78%, and Full provides 100%.
+- The actual sail meshes visually reef/open as the synchronized sail state changes.
+- The HUD ship panels show each ship's current sail state.
+- While working the rigging, the sailmaster objective and touch SAILS button show the current setting.
 
-## 0.5.0 foundation retained
+## 0.5.1 visual and speed corrections retained
+
+- The hatch-area sail is a compact raised square sail on its own mast/yardarms.
+- Sailors use two simple dark eye dots directly on the head.
+- Player walking speed is reduced on both upper and lower decks.
+- Arm and leg walk animation is slower and less exaggerated.
+- Ship top speed and acceleration are reduced so the boats feel heavier and give captains more time to maneuver.
+
+## Foundation retained
 
 - Ship geometry uses aligned shared deck/hull measurements.
 - Players have articulated arms and legs.
@@ -29,7 +40,7 @@ Version 0.5.1 is a patch release over 0.5.0 focused on the issues found during p
 - Players are automatically assigned to the less-populated team and cannot switch teams while they remain in the room.
 - Joining leads to an assigned-crew deployment screen and a **Spawn on ship** button.
 - Each ship has a helm. A player must take the captain role for that ship to move; without a captain the ship returns to a stop.
-- A second crew member can take the rigging station and trim sails for a short speed boost.
+- A second crew member can take the rigging station and control the persistent sail setting.
 - Players can cross to the other ship when the ships are close enough.
 - Each ship has an upper deck, hatch, and enclosed lower deck.
 - Each team's flag is below deck. Players cannot capture their own flag; capturing the opposing flag wins the current battle.
@@ -44,7 +55,7 @@ Version 0.5.1 is a patch release over 0.5.0 focused on the issues found during p
 - **Mouse wheel in third person** — change camera distance on desktop.
 - **E** — interact with helm, rigging, hatch, or flag; also leave a station.
 - **G** — cross to the other ship when it is close enough.
-- **Space** — trim sails while serving as sailmaster.
+- **Space / SAILS** — cycle Reefed → Cruising → Full while serving as sailmaster.
 - Touch devices show the **SAILS** button only while the player is serving as sailmaster.
 
 ## Multiplayer model
@@ -55,7 +66,7 @@ Kill das James 2 uses:
 - PeerJS Cloud for signaling.
 - WebRTC DataChannels for realtime game traffic.
 - Cloudflare TURN fallback for cross-network reliability.
-- Host-authoritative team assignment, ship movement, collision, crew roles, crossing, flag victory, cooldown, and battle resets.
+- Host-authoritative team assignment, ship movement, collision, crew roles, crossing, sail state, flag victory, cooldown, and battle resets.
 
 ## Netlify / TURN
 
