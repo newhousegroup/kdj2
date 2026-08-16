@@ -8,11 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=0.14.1">
-  <link rel="stylesheet" href="hud-0.6.css?v=0.14.1">
-  <link rel="stylesheet" href="combat-0.9.1.css?v=0.14.1">
-  <link rel="stylesheet" href="polish-0.12.1.css?v=0.14.1">
-  <link rel="stylesheet" href="features-0.14.1.css?v=0.14.1">
+  <link rel="stylesheet" href="styles.css?v=0.14.2">
+  <link rel="stylesheet" href="hud-0.6.css?v=0.14.2">
+  <link rel="stylesheet" href="combat-0.9.1.css?v=0.14.2">
+  <link rel="stylesheet" href="polish-0.12.1.css?v=0.14.2">
+  <link rel="stylesheet" href="features-0.14.2.css?v=0.14.2">
 </head>
 <body>
   <div id="gameRoot">
@@ -37,7 +37,7 @@
           <p class="join-look-hint">Drag to look · pinch in third person to zoom</p>
         </div>
         <p id="lobbyStatus" class="status"></p>
-        <span class="version">0.14.1</span>
+        <span class="version">0.14.2</span>
       </div>
     </section>
 
@@ -63,16 +63,10 @@
           <div id="speedHud" class="speed-hud" aria-label="Ship speed"><span id="speedText">Speed 0</span></div>
           <div id="currentRoomCode" class="room-code compact"></div>
           <span id="peopleCount">1 / 6</span>
-          <button id="membersBtn" class="hud-button" type="button" aria-controls="membersPanel">Players 1</button>
           <button id="settingsBtn" class="hud-button">Settings</button>
           <button id="leaveBtn" class="hud-button">Leave</button>
         </div>
       </header>
-
-      <div id="membersPanel" class="members-panel hidden" aria-label="Online players">
-        <div class="members-heading"><span>Online players</span><span>Live</span></div>
-        <div id="membersList" class="members-list"></div>
-      </div>
 
       <div id="captainCompass" class="captain-compass hidden" aria-label="Ship heading compass">
         <div class="compass-scale">
@@ -123,8 +117,8 @@
     </section>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-  <script src="version.js?v=0.14.1"></script>
-  <script src="src/network.js?v=0.14.1"></script>
-  <script type="module" src="src/game-0.14.1.js?v=0.14.1"></script>
+  <script src="version.js?v=0.14.2"></script>
+  <script src="src/network.js?v=0.14.2"></script>
+  <script type="module" src="src/game-0.14.2.js?v=0.14.2"></script>
 </body>
 </html>
