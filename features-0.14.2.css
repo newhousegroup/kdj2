@@ -1,0 +1,24 @@
+.objective {
+  transition: opacity 420ms ease, transform 420ms ease, visibility 420ms ease;
+}
+.objective.objective-faded {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-5px);
+}
+.ship-panels {
+  top: calc(env(safe-area-inset-top, 0px) + 154px);
+  right: 22px;
+  left: auto;
+}
+.ship-panel {
+  width: 184px;
+}
+@media (max-width: 760px) {
+  .ship-panels {
+    top: calc(env(safe-area-inset-top, 0px) + 137px);
+    right: 12px;
+    left: auto;
+  }
+  .ship-panel { width: 148px; }
+}
