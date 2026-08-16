@@ -1,23 +1,20 @@
 # Kill das James 2
 
-**Version 0.2.0**
+**Version 0.3.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.2.0 camera and graphics update
+## 0.3.0 ship physics and space update
 
-Version 0.2.0 keeps the 0.1.0 multiplayer/gameplay foundation and substantially changes presentation and player control:
+Version 0.3.0 builds on the first-person/graphics work in 0.2.0 and focuses on making the ships behave and feel like physical spaces:
 
-- First-person is now the default player camera.
-- Desktop players click the game world to enter mouse-look; touch players drag open screen space to look around.
-- A Settings panel allows switching between **First person** and **Third person** at any time.
-- Camera preference is stored locally and persists between sessions.
-- Normal walking is relative to the player's look direction, while captain/helm controls remain ship controls.
-- The local sailor model is hidden in first-person and visible again in third-person.
-- The ocean now uses animated procedural waves and distance haze.
-- The world has a procedural gradient sky, sun glow, moving clouds, atmospheric fog, improved lighting, tone mapping, and soft shadows.
-- Ships now have shaped bow/stern sections, colored hull stripes, textured plank decks, railings, multiple masts and sails, rigging lines, flags, helm detail, rope/rigging props, portholes, lanterns, and richer lower decks.
-- Crew models now include legs, coats, heads, and sailor hats instead of the original simple cylinder-and-sphere figures.
+- The British and French ships now have host-authoritative collision. Their rotated hull footprints are checked with oriented separating-axis collision tests, so ships can no longer pass through one another.
+- When hulls collide, the simulation restores the last non-overlapping transforms and stops the ships rather than letting them overlap.
+- The ocean surface no longer visually leaks through the lower deck. The lower deck is now a closed interior and the local ocean surface is hidden while the player is below deck.
+- The lower deck has more vertical clearance, a raised dry floor, taller side/end walls, a ceiling, overhead beams, repositioned lights/props, and a higher first-person eye position so the sailor's head no longer clips through the ceiling.
+- The sail plan is much fuller: three masts, multiple billowed square sails, additional triangular sails, extra yardarms, and more standing rigging.
+- Sails have a subtle visual movement rather than remaining completely rigid.
+- The mobile/tablet **SAILS** action is hidden by default and appears only after the player has actually taken the sailmaster/rigging station.
 
 ## Core game loop
 
@@ -28,18 +25,19 @@ Version 0.2.0 keeps the 0.1.0 multiplayer/gameplay foundation and substantially 
 - Each ship has a helm. A player must take the captain role for that ship to move; without a captain the ship returns to a stop.
 - A second crew member can take the rigging station and trim sails for a short speed boost.
 - Players can board the other ship when the ships are close enough.
-- Each ship has an upper deck, hatch, and lower deck.
+- Each ship has an upper deck, hatch, and enclosed lower deck.
 - Each team's flag is below deck. Players cannot capture their own flag; capturing the opposing flag wins the battle.
 
-## Controls
+## Camera and controls
 
+- First-person is the default camera; Settings can switch to third-person.
 - **WASD** — walk relative to view direction, or steer/throttle while serving as captain.
 - **Mouse** — look around after clicking the game world on desktop.
 - **Touch drag** — look around on mobile/tablet.
 - **E** — interact with helm, rigging, hatch, or flag; also leave a station.
 - **G** — board the other ship when it is close enough.
 - **Space** — trim sails while serving as sailmaster.
-- **Settings** — switch between first-person and third-person camera.
+- Touch devices show the **SAILS** button only while the player is serving as sailmaster.
 
 ## Multiplayer model
 
@@ -49,7 +47,7 @@ Kill das James 2 uses:
 - PeerJS Cloud for signaling.
 - WebRTC DataChannels for realtime game traffic.
 - Cloudflare TURN fallback for cross-network reliability.
-- Host-authoritative team assignment, ship movement, crew roles, boarding, and flag victory.
+- Host-authoritative team assignment, ship movement, collision, crew roles, boarding, and flag victory.
 
 ## Netlify / TURN
 
