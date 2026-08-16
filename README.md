@@ -1,23 +1,24 @@
 # Kill das James 2
 
-**Version 0.6.1**
+**Version 0.6.2**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.6.1 startup repair
+## 0.6.2 startup stabilization
 
-Version 0.6.1 fixes a JavaScript startup regression introduced by 0.6.0.
+Version 0.6.2 replaces the fragile nested runtime patch chain used by 0.6.0 and 0.6.1.
 
-- 0.6.0 generated an additional layer of JavaScript for the HUD/compass changes.
-- Newline escapes inside that generated patch were escaped one level too deeply, so patch targets looked for literal `\n` text instead of real line breaks.
-- The generated module therefore threw during startup before the lobby button handlers were attached, making both **Create battle** and **Join battle** appear unresponsive.
-- 0.6.1 repairs the generated patch before execution and preserves the 0.6.0 gameplay/HUD changes.
+- The game now loads the known-good 0.5.0 game module once and applies the retained 0.5.1–0.6.0 changes directly in one startup layer.
+- It no longer executes 0.6.0 → 0.5.2 → 0.5.0 nested generated modules.
+- The new launcher was syntax-checked before being committed.
+- Startup failures now write a visible `Game failed to load: ...` message to the lobby instead of leaving Create/Join buttons silently unresponsive.
+- The 0.6.0 HUD, compass, movement, sail, spacing, and six-second rematch behavior are retained.
 
 ## 0.6.0 HUD and handling refinement retained
 
 - The ship-status HUD displays only the local player's own team/ship.
-- Player movement is 120% of the 0.5.3 pace: upper deck speed is 4.98 and lower-deck speed is 4.02 world units per second.
-- Ship movement is 90% of the 0.5.3 tuning: full-sail target speed is 6.03, with acceleration/deceleration scaled down proportionally.
+- Player movement is 120% of the 0.5.1 pace: upper deck speed is 4.98 and lower-deck speed is 4.02 world units per second.
+- Ship movement is 90% of the 0.5.1 tuning: full-sail target speed is 6.03, with acceleration/deceleration scaled down proportionally.
 - Battle restart cooldown is 6 seconds while keeping the same persistent room and locked teams.
 - Captains receive a top-center heading compass while occupying the helm.
 - The compass follows the ship's actual heading rather than camera/look direction.
