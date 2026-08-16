@@ -5,6 +5,15 @@ import { patchGameSource as patch0112 } from "./patch-0.11.2.js?v=0.11.2";
 import { patchGameSource as patch0113 } from "./patch-0.11.3.js?v=0.11.3";
 import { patchGameSource as patch0120 } from "./patch-0.12.0.js?v=0.12.0";
 
+// Keep networking internals unchanged, but use player-facing copy while TURN/WebRTC
+// setup is happening.
+const originalNetworkStatus = window.KDJNetwork?.prototype?.status;
+if (originalNetworkStatus) {
+  window.KDJNetwork.prototype.status = function status0120(text, kind = "ready") {
+    return originalNetworkStatus.call(this, text === "Preparing relay…" ? "Connecting" : text, kind);
+  };
+}
+
 const NativeBlob = globalThis.Blob;
 let patchedFinalGame = false;
 
