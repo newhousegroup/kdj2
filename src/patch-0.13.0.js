@@ -199,7 +199,7 @@ function interaction(p) {`,
   ui.touchSword?.classList.toggle("hidden", Boolean(p.role) || p.alive === false);
 }
 
-function normalizeAngle(value)`,
+`,
     'battle objective lifecycle'
   );
 
@@ -284,7 +284,7 @@ function handleGrapple(p) {
   p.z = 0;
 }
 
-function personal(id, text) {`,
+`,
     'grapple failure and water recovery'
   );
 
