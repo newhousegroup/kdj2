@@ -1,8 +1,21 @@
 # Kill das James 2
 
-**Version 0.14.2**
+**Version 0.14.4**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.14.4 right-side ship HUD
+
+- Moves the local ship information panel from the upper-left to the upper-right, aligned beneath the HP and speed indicators.
+- This release is layout-only: the stable 0.14.3 gameplay, render, input, camera, networking, and team-badge logic is unchanged.
+- No objective-fade, online-members, grappling-water, or other 0.13.x runtime systems are reintroduced.
+
+## 0.14.3 stable checkpoint
+
+- Restores the exact stable 0.12.1 gameplay/render/input/camera chain after 0.14.1 and 0.14.2 still reproduced the camera freeze in live testing.
+- Adds only one small runtime fix: the British/French HUD badge now follows the authoritative local-player team state.
+- No online-members system, objective-fade system, moved ship HUD, water state, grappling-risk system, or camera modification is present.
+- Confirmed by live testing as the new stable checkpoint for subsequent isolated changes.
 
 ## 0.14.2 emergency online-members isolation
 
