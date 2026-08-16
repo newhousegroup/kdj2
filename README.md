@@ -1,8 +1,17 @@
 # Kill das James 2
 
-**Version 0.9.3**
+**Version 0.10.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.10.0 immersion and ship-detail pass
+
+- Helm occupation now places the sailor behind the wheel with physical spacing instead of clipping the character into the helm.
+- A captain's body remains aligned with the helm/ship while camera look stays free, so the player can look around without rotating the entire sailor model.
+- Ships receive a substantial procedural detail pass: helm pedestal, bowsprit and standing rigging, crow's nest, hull fittings, metal rings, mooring cleats, rope coils, stern trim, lanterns, and deck grating.
+- Ocean, sky, and cloud shells follow the camera horizontally so normal sailing can no longer expose a black rendering void at the technical edge of the scene.
+- The project now includes DESIGN_DIRECTION.md as the visual north star for future work: grounded proportions, layered construction, believable materials, atmospheric depth, cinematic motion, and strong browser/mobile performance.
+- All 0.9.3 gameplay systems are retained.
 
 ## 0.9.3 speed stability
 
