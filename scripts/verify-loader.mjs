@@ -6,7 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const srcDir = resolve(root, "src");
 const launcherArg = process.argv[2] || null;
-const patchArg = process.argv[3] || null;
+const patchArgs = process.argv.slice(3);
 
 async function resolveActiveLauncher() {
   if (launcherArg) return resolve(root, launcherArg);
@@ -74,11 +74,12 @@ while (isGeneratedLoader(source)) {
 if (depth === 0) throw new Error("Launcher did not contain a generated loader");
 
 let finalSource = source;
-if (patchArg) {
+for (const patchArg of patchArgs) {
   const patchPath = resolve(root, patchArg);
-  const patchModule = await import(pathToFileURL(patchPath).href + `?verify=${Date.now()}`);
-  if (typeof patchModule.patchGameSource !== "function") throw new Error(`${patchArg} does not export patchGameSource()`);
-  finalSource = patchModule.patchGameSource(finalSource);
+  const patchModule = await import(pathToFileURL(patchPath).href + `?verify=${Date.now()}-${Math.random()}`);
+  const patchFn = patchModule.patchGameSource || patchModule.patchGameSource011;
+  if (typeof patchFn !== "function") throw new Error(`${patchArg} does not export a supported patch function`);
+  finalSource = patchFn(finalSource);
   console.log(`Applied final source patch: ${patchArg} (${finalSource.length} bytes)`);
 }
 
@@ -104,4 +105,4 @@ try {
   await unlink(finalPath).catch(() => {});
 }
 
-console.log(`Generated game syntax OK (${finalSource.length} bytes, ${depth} loader stages${patchArg ? ", patched" : ""}).`);
+console.log(`Generated game syntax OK (${finalSource.length} bytes, ${depth} loader stages${patchArgs.length ? `, ${patchArgs.length} patches` : ""}).`);
