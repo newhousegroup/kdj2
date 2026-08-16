@@ -8,11 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=0.14.2">
-  <link rel="stylesheet" href="hud-0.6.css?v=0.14.2">
-  <link rel="stylesheet" href="combat-0.9.1.css?v=0.14.2">
-  <link rel="stylesheet" href="polish-0.12.1.css?v=0.14.2">
-  <link rel="stylesheet" href="features-0.14.2.css?v=0.14.2">
+  <link rel="stylesheet" href="styles.css?v=0.14.3">
+  <link rel="stylesheet" href="hud-0.6.css?v=0.14.3">
+  <link rel="stylesheet" href="combat-0.9.1.css?v=0.14.3">
+  <link rel="stylesheet" href="polish-0.12.1.css?v=0.14.3">
 </head>
 <body>
   <div id="gameRoot">
@@ -22,12 +21,15 @@
       <div class="lobby-panel">
         <div class="brand">Kill das James 2</div>
         <p class="subtitle">Two ships. Two crews. One flag.</p>
+
         <label for="playerName">Name</label>
         <input id="playerName" maxlength="20" autocomplete="nickname" placeholder="Your name">
+
         <div id="lobbyHome" class="stack">
           <button id="createRoomBtn" class="primary">Create battle</button>
           <button id="showJoinBtn" class="secondary">Join battle</button>
         </div>
+
         <div id="joinPanel" class="stack hidden">
           <button id="joinBackBtn" class="text-button">← Back</button>
           <p class="small-heading">Enter room colors</p>
@@ -36,8 +38,9 @@
           <button id="joinRoomBtn" class="primary" disabled>Join battle</button>
           <p class="join-look-hint">Drag to look · pinch in third person to zoom</p>
         </div>
+
         <p id="lobbyStatus" class="status"></p>
-        <span class="version">0.14.2</span>
+        <span class="version">0.14.3</span>
       </div>
     </section>
 
@@ -60,7 +63,9 @@
             <div class="health-track" aria-hidden="true"><div id="healthFill" class="health-fill"></div></div>
             <span id="healthText" class="health-text">100 HP</span>
           </div>
-          <div id="speedHud" class="speed-hud" aria-label="Ship speed"><span id="speedText">Speed 0</span></div>
+          <div id="speedHud" class="speed-hud" aria-label="Ship speed">
+            <span id="speedText">Speed 0</span>
+          </div>
           <div id="currentRoomCode" class="room-code compact"></div>
           <span id="peopleCount">1 / 6</span>
           <button id="settingsBtn" class="hud-button">Settings</button>
@@ -70,55 +75,102 @@
 
       <div id="captainCompass" class="captain-compass hidden" aria-label="Ship heading compass">
         <div class="compass-scale">
-          <span class="compass-mark major" data-bearing="0">N</span><span class="compass-mark minor" data-bearing="22.5"></span>
-          <span class="compass-mark major" data-bearing="45">NE</span><span class="compass-mark minor" data-bearing="67.5"></span>
-          <span class="compass-mark major" data-bearing="90">E</span><span class="compass-mark minor" data-bearing="112.5"></span>
-          <span class="compass-mark major" data-bearing="135">SE</span><span class="compass-mark minor" data-bearing="157.5"></span>
-          <span class="compass-mark major" data-bearing="180">S</span><span class="compass-mark minor" data-bearing="202.5"></span>
-          <span class="compass-mark major" data-bearing="225">SW</span><span class="compass-mark minor" data-bearing="247.5"></span>
-          <span class="compass-mark major" data-bearing="270">W</span><span class="compass-mark minor" data-bearing="292.5"></span>
-          <span class="compass-mark major" data-bearing="315">NW</span><span class="compass-mark minor" data-bearing="337.5"></span>
+          <span class="compass-mark major" data-bearing="0">N</span>
+          <span class="compass-mark minor" data-bearing="22.5"></span>
+          <span class="compass-mark major" data-bearing="45">NE</span>
+          <span class="compass-mark minor" data-bearing="67.5"></span>
+          <span class="compass-mark major" data-bearing="90">E</span>
+          <span class="compass-mark minor" data-bearing="112.5"></span>
+          <span class="compass-mark major" data-bearing="135">SE</span>
+          <span class="compass-mark minor" data-bearing="157.5"></span>
+          <span class="compass-mark major" data-bearing="180">S</span>
+          <span class="compass-mark minor" data-bearing="202.5"></span>
+          <span class="compass-mark major" data-bearing="225">SW</span>
+          <span class="compass-mark minor" data-bearing="247.5"></span>
+          <span class="compass-mark major" data-bearing="270">W</span>
+          <span class="compass-mark minor" data-bearing="292.5"></span>
+          <span class="compass-mark major" data-bearing="315">NW</span>
+          <span class="compass-mark minor" data-bearing="337.5"></span>
         </div>
         <span class="compass-center" aria-hidden="true"></span>
       </div>
 
       <div class="ship-panels">
-        <div class="ship-panel british"><strong>HMS Resolute</strong><span id="britishMobility">Mobility 100% · Sails Cruising</span></div>
-        <div class="ship-panel french"><strong>Fleur Royale</strong><span id="frenchMobility">Mobility 100% · Sails Cruising</span></div>
+        <div class="ship-panel british">
+          <strong>HMS Resolute</strong>
+          <span id="britishMobility">Mobility 100% · Sails Cruising</span>
+        </div>
+        <div class="ship-panel french">
+          <strong>Fleur Royale</strong>
+          <span id="frenchMobility">Mobility 100% · Sails Cruising</span>
+        </div>
       </div>
 
       <div id="objective" class="objective">Capture the enemy flag below deck.</div>
       <div id="interactionPrompt" class="interaction-prompt hidden"></div>
       <div id="toast" class="toast hidden"></div>
       <div id="crosshair" class="crosshair" aria-hidden="true"></div>
-      <div id="deathNotice" class="death-notice hidden" role="status"><strong>You are out</strong><span>Wait for the next battle to rejoin your crew.</span></div>
-      <div class="controls-help"><span>WASD move</span><span>Mouse look</span><span>E interact / hold flag</span><span>G board</span><span>Space sword / sails / fire</span></div>
+      <div id="deathNotice" class="death-notice hidden" role="status">
+        <strong>You are out</strong>
+        <span>Wait for the next battle to rejoin your crew.</span>
+      </div>
+
+      <div class="controls-help">
+        <span>WASD move</span>
+        <span>Mouse look</span>
+        <span>E interact / hold flag</span>
+        <span>G board</span>
+        <span>Space sword / sails / fire</span>
+      </div>
+
       <div id="touchControls" class="touch-controls">
         <div id="joystick" class="joystick"><div id="joystickKnob" class="joystick-knob"></div></div>
         <div class="touch-actions">
-          <button id="touchInteract">E</button><button id="touchGrapple">G</button>
-          <button id="touchSword" class="boost">SWORD</button><button id="touchRigging" class="boost hidden">SAILS</button><button id="touchFire" class="boost hidden">FIRE</button>
+          <button id="touchInteract">E</button>
+          <button id="touchGrapple">G</button>
+          <button id="touchSword" class="boost">SWORD</button>
+          <button id="touchRigging" class="boost hidden">SAILS</button>
+          <button id="touchFire" class="boost hidden">FIRE</button>
         </div>
       </div>
     </section>
 
     <section id="settingsPanel" class="settings-overlay hidden" aria-hidden="true">
       <div class="settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
-        <div class="settings-heading"><div><p class="eyebrow">Game settings</p><h2 id="settingsTitle">Settings</h2></div><button id="settingsCloseBtn" class="icon-button" aria-label="Close settings">×</button></div>
+        <div class="settings-heading">
+          <div>
+            <p class="eyebrow">Game settings</p>
+            <h2 id="settingsTitle">Settings</h2>
+          </div>
+          <button id="settingsCloseBtn" class="icon-button" aria-label="Close settings">×</button>
+        </div>
+
         <div class="setting-row">
-          <div><strong>Camera</strong><p>First person is the default. Third person follows behind your sailor; pinch on touch devices to change distance.</p></div>
-          <div class="segmented" role="group" aria-label="Camera mode"><button id="firstPersonBtn" data-camera="first">First person</button><button id="thirdPersonBtn" data-camera="third">Third person</button></div>
+          <div>
+            <strong>Camera</strong>
+            <p>First person is the default. Third person follows behind your sailor; pinch on touch devices to change distance.</p>
+          </div>
+          <div class="segmented" role="group" aria-label="Camera mode">
+            <button id="firstPersonBtn" data-camera="first">First person</button>
+            <button id="thirdPersonBtn" data-camera="third">Third person</button>
+          </div>
         </div>
       </div>
     </section>
 
     <section id="victory" class="screen victory-screen hidden">
-      <div class="victory-card"><p class="eyebrow">Battle over</p><h1 id="victoryTitle">British victory</h1><p id="victoryText">The French flag was captured.</p><p id="resetCountdown" class="ship-name">Next battle in 6s</p></div>
+      <div class="victory-card">
+        <p class="eyebrow">Battle over</p>
+        <h1 id="victoryTitle">British victory</h1>
+        <p id="victoryText">The French flag was captured.</p>
+        <p id="resetCountdown" class="ship-name">Next battle in 6s</p>
+      </div>
     </section>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-  <script src="version.js?v=0.14.2"></script>
-  <script src="src/network.js?v=0.14.2"></script>
-  <script type="module" src="src/game-0.14.2.js?v=0.14.2"></script>
+  <script src="version.js?v=0.14.3"></script>
+  <script src="src/network.js?v=0.14.3"></script>
+  <script type="module" src="src/game-0.14.3.js?v=0.14.3"></script>
 </body>
 </html>
