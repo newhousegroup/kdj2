@@ -1,8 +1,17 @@
 # Kill das James 2
 
-**Version 0.13.0**
+**Version 0.13.1**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.13.1 runtime performance repair
+
+- Fixes the 0.13.0 in-world freeze regression caused by rebuilding the complete online-player DOM roster on every render frame, including while the roster panel was closed.
+- The Players button count remains live, but the detailed roster now does no DOM rebuilding while closed.
+- While the Players panel is open, roster rendering is capped at four refreshes per second and only rebuilds when player/status data actually changes.
+- Team-badge synchronization remains authoritative but avoids unnecessary DOM writes when the displayed team is already correct.
+- The roster now tolerates transient/deploying player state safely instead of assuming every member already has a fully resolved ship/status.
+- All 0.13.0 round-objective, team indicator, ship HUD, online-player, grappling/water, combat, sailing and visual features are retained.
 
 ## 0.13.0 battle HUD, online players and grappling risk
 
