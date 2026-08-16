@@ -1,27 +1,26 @@
 # Kill das James 2
 
-**Version 0.5.0**
+**Version 0.5.1**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.5.0 model, character, camera and movement polish
+## 0.5.1 visual and speed corrections
 
-Version 0.5.0 focuses on making the ships and sailors feel more coherent while fixing edge movement and improving third-person camera control.
+Version 0.5.1 is a patch release over 0.5.0 focused on the issues found during playtesting.
 
-- The standalone/floating sail has been moved forward to just ahead of the lower-deck hatch and raised well above player/head height. It is now visibly attached to mast/rigging instead of appearing to float around the stern.
-- Ship geometry has been realigned around shared deck/hull measurements. Side rails now terminate at the actual stern/fore corners, bow rails converge on the bow point, and metal corner caps/hardware are anchored to those same points.
-- Player models now have articulated legs and arms. Walking animates the limbs based on actual player movement.
-- Sailors now have visible eyes/pupils and a face oriented with the player's synced look direction, making it easier to tell where another player is looking.
-- Third-person touch controls now support pinch zoom. Pinching inward moves the camera farther away; the selected distance is stored locally. Mouse-wheel zoom is also available on desktop while in third person.
-- Player movement no longer uses a hard rectangular clamp. The upper deck has a tapered-bow walkable shape and boundary movement slides along rails/edges instead of consuming the movement input, removing the edge/corner dead-zone feeling.
-- Lower-deck movement uses the same boundary-safe sliding behavior.
+- The hatch-area sail has been rebuilt as a compact raised square sail on its own mast/yardarms. It remains just forward of the lower-deck hatch but no longer produces the malformed/intersecting triangular shape seen in 0.5.0.
+- Sailors now use two simple dark eye dots directly on the head instead of white eyeballs, pupils, and a nose.
+- Player walking speed has been reduced on both upper and lower decks.
+- Arm and leg walk animation has been slowed and reduced in amplitude so it matches the new walking pace.
+- Ship top speed and acceleration have both been reduced so the boats feel heavier and give captains more time to maneuver.
 
-## Persistent room / battle flow
+## 0.5.0 foundation retained
 
-- One four-color room can host repeated battles without reconnecting.
-- Capturing the opposing flag ends only the current battle.
-- A 10-second cooldown follows a win.
-- The host then resets ship positions, stations, movement state, and players for the next battle while keeping the same room connections and locked teams.
+- Ship geometry uses aligned shared deck/hull measurements.
+- Players have articulated arms and legs.
+- Third-person touch controls support pinch zoom; desktop supports mouse-wheel distance changes.
+- Deck-edge movement slides along rails instead of locking the player against the boundary.
+- One four-color room can host repeated battles, with a 10-second reset after a win while keeping the same room and locked teams.
 
 ## Core game loop
 
