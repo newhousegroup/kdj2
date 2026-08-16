@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-      - fix-0.9.2
-      - fix-0.9.3
+      - release-0.10.0
 
 jobs:
   verify:
@@ -15,5 +14,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node scripts/verify-loader.mjs
-      - run: node scripts/verify-loader.mjs src/game-0.9.3.js
+      - run: node --check src/game-0.10.0.js
+      - run: node --check src/patch-0.10.0.js
+      - run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js
