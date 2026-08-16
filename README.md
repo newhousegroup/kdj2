@@ -1,32 +1,34 @@
 # Kill das James 2
 
-**Version 0.3.0**
+**Version 0.4.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.3.0 ship physics and space update
+## 0.4.0 persistent-room battle flow
 
-Version 0.3.0 builds on the first-person/graphics work in 0.2.0 and focuses on making the ships behave and feel like physical spaces:
+Version 0.4.0 turns a room into a persistent session that can run multiple battles without changing the four-color code or reconnecting players.
 
-- The British and French ships now have host-authoritative collision. Their rotated hull footprints are checked with oriented separating-axis collision tests, so ships can no longer pass through one another.
-- When hulls collide, the simulation restores the last non-overlapping transforms and stops the ships rather than letting them overlap.
-- The ocean surface no longer visually leaks through the lower deck. The lower deck is now a closed interior and the local ocean surface is hidden while the player is below deck.
-- The lower deck has more vertical clearance, a raised dry floor, taller side/end walls, a ceiling, overhead beams, repositioned lights/props, and a higher first-person eye position so the sailor's head no longer clips through the ceiling.
-- The sail plan is much fuller: three masts, multiple billowed square sails, additional triangular sails, extra yardarms, and more standing rigging.
-- Sails have a subtle visual movement rather than remaining completely rigid.
-- The mobile/tablet **SAILS** action is hidden by default and appears only after the player has actually taken the sailmaster/rigging station.
+- Hull collision remains host-authoritative, but collision is now deliberately silent: ships stop on contact without showing a collision popup/toast.
+- The sail plan around the stern has been rearranged so the helm has a clear forward sightline. Cloth is placed forward of the captain and above eye level rather than sitting in the helm view.
+- One room/code can now host repeated battles.
+- Capturing the opposing flag ends only the current battle, not the room.
+- A 10-second cooldown begins after a win and is shown to everyone in the room.
+- When the countdown reaches zero, the host resets the authoritative battle state while keeping the existing PeerJS/WebRTC room alive.
+- Ships return to their starting positions with zero speed, full mobility, no occupied crew stations, and no active sail boost.
+- Every connected player keeps the same locked British/French team and is automatically returned to their own ship for the next battle.
+- Round numbers increase within the same room.
 
 ## Core game loop
 
 - Two ships: British **HMS Resolute** and French **Fleur Royale**.
 - Up to six players in one color-code room.
-- Players are automatically assigned to the less-populated team and cannot switch during the battle.
+- Players are automatically assigned to the less-populated team and cannot switch teams while they remain in the room.
 - Joining leads to an assigned-crew deployment screen and a **Spawn on ship** button.
 - Each ship has a helm. A player must take the captain role for that ship to move; without a captain the ship returns to a stop.
 - A second crew member can take the rigging station and trim sails for a short speed boost.
 - Players can board the other ship when the ships are close enough.
 - Each ship has an upper deck, hatch, and enclosed lower deck.
-- Each team's flag is below deck. Players cannot capture their own flag; capturing the opposing flag wins the battle.
+- Each team's flag is below deck. Players cannot capture their own flag; capturing the opposing flag wins the current battle.
 
 ## Camera and controls
 
@@ -47,7 +49,7 @@ Kill das James 2 uses:
 - PeerJS Cloud for signaling.
 - WebRTC DataChannels for realtime game traffic.
 - Cloudflare TURN fallback for cross-network reliability.
-- Host-authoritative team assignment, ship movement, collision, crew roles, boarding, and flag victory.
+- Host-authoritative team assignment, ship movement, collision, crew roles, boarding, flag victory, cooldown, and battle resets.
 
 ## Netlify / TURN
 
