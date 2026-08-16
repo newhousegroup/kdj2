@@ -91,7 +91,7 @@ patch(
   const labels = ["Reefed", "Cruising", "Full"];
   ship.sailTrim = ((ship.sailTrim ?? 1) + 1) % labels.length;
   ship.boostUntil = 0;
-  personal(p.id, `Sails set to ${labels[ship.sailTrim]}.`);
+  personal(p.id, "Sails set to " + labels[ship.sailTrim] + ".");
 }`,
   "persistent sail trim control"
 );
