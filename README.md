@@ -1,8 +1,17 @@
 # Kill das James 2
 
-**Version 0.11.3**
+**Version 0.12.0**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.12.0 details update
+
+- Player-facing network setup copy now says **Connecting** instead of **Preparing relay** while TURN/WebRTC setup is happening.
+- British sailor uniforms now read much more clearly as red-coated period uniforms: cream breeches, black boots and cuffs, horizontal front lace, brass buttons, epaulettes, coat tails, a taller black shako, pale hat band, front plate, and red/white plume.
+- French sailors now use a darker naval-blue uniform treatment with dark boots, red cuffs, pale cross-belts and waist belt, brass buttons/epaulettes, a taller shako, gold band, tricolour cockade, and red plume.
+- The single reference island has a denser shoreline and vegetation pass with scattered boulders, bushes, two small beach palms, driftwood, and dry-grass clumps while retaining the existing island collision boundary.
+- Ship and lower-deck flag meshes now use procedurally drawn national flags: the **Union Jack** for the British crew and the **French tricolour** for the French crew, with a small billowed cloth profile instead of flat team-colour rectangles.
+- All 0.11.3 steering fixes, island collision, 50% Reefed sail power, combat, cannon, compass, momentum, and multiplayer behavior are retained.
 
 ## 0.11.3 forward helm correction
 
