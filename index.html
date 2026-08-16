@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alan+Sans:wght@300..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=0.9.0">
-  <link rel="stylesheet" href="hud-0.6.css?v=0.9.0">
-  <link rel="stylesheet" href="combat-0.9.css?v=0.9.0">
+  <link rel="stylesheet" href="styles.css?v=0.9.1">
+  <link rel="stylesheet" href="hud-0.6.css?v=0.9.1">
+  <link rel="stylesheet" href="combat-0.9.1.css?v=0.9.1">
 </head>
 <body>
   <div id="gameRoot">
@@ -38,7 +38,7 @@
         </div>
 
         <p id="lobbyStatus" class="status"></p>
-        <span class="version">0.9.0</span>
+        <span class="version">0.9.1</span>
       </div>
     </section>
 
@@ -60,6 +60,9 @@
           <div id="healthHud" class="health-hud" aria-label="Health 100 of 100">
             <div class="health-track" aria-hidden="true"><div id="healthFill" class="health-fill"></div></div>
             <span id="healthText" class="health-text">100 HP</span>
+          </div>
+          <div id="speedHud" class="speed-hud" aria-label="Ship speed">
+            <span id="speedText">Speed 0.0</span>
           </div>
           <div id="currentRoomCode" class="room-code compact"></div>
           <span id="peopleCount">1 / 6</span>
@@ -165,8 +168,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js"></script>
-  <script src="version.js?v=0.9.0"></script>
-  <script src="src/network.js?v=0.9.0"></script>
-  <script type="module" src="src/game-0.9.0.js?v=0.9.0"></script>
+  <script src="version.js?v=0.9.1"></script>
+  <script src="src/network.js?v=0.9.1"></script>
+  <script type="module" src="src/game-0.9.1.js?v=0.9.1"></script>
 </body>
 </html>
