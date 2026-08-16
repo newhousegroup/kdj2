@@ -1,21 +1,27 @@
 # Kill das James 2
 
-**Version 0.7.0**
+**Version 0.7.1**
 
 A browser-based 3D multiplayer naval game by Newhouse.
 
-## 0.7.0 cannons
+## 0.7.1 cannon balance tuning
 
-Version 0.7.0 adds the first arcade cannon-combat system.
+Version 0.7.1 keeps the 0.7.0 cannon system intact and retunes its pacing/damage.
+
+- Each individual cannon now has a **10-second cooldown** between shots.
+- Firing one cannon does not affect the reload timer of the other cannons.
+- Each successful hit now removes a host-authoritative random **4–9 percentage points** of enemy mobility instead of a fixed 12 points.
+- The 25% mobility floor remains unchanged.
+- All other 0.7.0 cannon controls, aiming, projectile synchronization, station occupation, and reset behavior are unchanged.
+
+## 0.7.0 cannons retained
 
 - Each ship has four usable deck cannons: fore/aft positions on both port and starboard sides.
 - Walk near a cannon and press **E** to man it. A cannon can only have one gunner at a time.
 - While serving as gunner, **A / D** adjusts the cannon within a limited broadside firing arc.
 - **Space** fires on desktop. Touch devices show a dedicated **FIRE** button only while the player is manning a cannon.
-- Cannons have a short cooldown between shots.
 - Cannon projectiles are visible and synchronized through the existing room state.
 - The host authoritatively simulates projectile movement and decides hits.
-- A hit reduces the opposing ship's mobility by 12 percentage points, down to a 25% minimum. Existing ship movement already scales with mobility, so damaged ships accelerate, steer, and travel more slowly.
 - Cannon range is intentionally shorter than the 300-unit starting separation, requiring both crews to close distance before firing becomes useful.
 - The captain may leave the helm and take a cannon like any other sailor; while nobody is at the helm, the ship naturally slows/stops as before.
 - Cannon occupation and projectiles are cleared between battles while the room itself remains connected.
