@@ -81,7 +81,7 @@ function updateMembersPanel(local, now = performance.now(), force = false) {
   ui.membersList.replaceChildren(fragment);
 }
 
-function interaction(p) {`,
+`,
     'throttled online members renderer'
   );
 
