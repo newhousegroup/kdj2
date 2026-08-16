@@ -1,8 +1,15 @@
 # Kill das James 2
 
-**Version 0.11.2**
+**Version 0.11.3**
 
 A browser-based 3D multiplayer naval game by Newhouse.
+
+## 0.11.3 forward helm correction
+
+- Corrected the remaining helm sign mismatch reported in 0.11.2.
+- While moving forward, A / joystick-left now turns the bow left and D / joystick-right turns the bow right.
+- Reverse steering keeps the 0.11.2 behavior that was confirmed correct by player testing.
+- Island collision, 50% Reefed sail power, compass direction, momentum, combat, and all other 0.11.2 systems are unchanged.
 
 ## 0.11.2 island collision and helm consistency
 
