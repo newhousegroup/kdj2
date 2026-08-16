@@ -27,6 +27,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html version.js README.md
+          git add index.html version.js README.md src/patch-0.13.0.js
           git commit -m "Wire KDJs 0.13.0 release"
           git push origin HEAD:release-0.13.0
