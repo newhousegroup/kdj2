@@ -1,0 +1,9 @@
+.brand,
+.game-title,
+#settingsTitle {
+  font-family: "Jacquard 24", serif;
+}
+
+.compass-mark.major {
+  font-family: "Cormorant Garamond", serif;
+}
