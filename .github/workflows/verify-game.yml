@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --check src/game-0.19.0.js
       - run: node --check src/game-0.18.11.js
       - run: node --check src/game-0.18.10.js
       - run: node --check src/game-0.18.9.js
@@ -53,10 +54,10 @@ jobs:
       - run: node --check src/patch-0.18.3.js
       - run: node --check src/patch-0.18.9.js
       - run: node --check src/patch-0.19.0.js
-      - run: grep -F 'const SWORD_CONE_45 = "    if (facing < 0.7071067811865476 || distance >= targetDistance) continue;";' src/game-0.18.11.js
-      - run: grep -F 'const SPEED_SNAP_ALWAYS = "    if (Math.abs(ship.speed) < 0.025) ship.speed = 0;";' src/game-0.18.11.js
-      - run: grep -F 'const SPEED_SNAP_IDLE_ONLY = "    if (!speedControl && Math.abs(ship.speed) < 0.025) ship.speed = 0;";' src/game-0.18.11.js
-      - run: '! grep -F "patch-0.18.9.js" src/game-0.18.11.js'
+      - run: grep -F 'const SWORD_CONE_45 = "    if (facing < 0.7071067811865476 || distance >= targetDistance) continue;";' src/game-0.19.0.js
+      - run: grep -F 'const SPEED_SNAP_IDLE_ONLY = "    if (!speedControl && Math.abs(ship.speed) < 0.025) ship.speed = 0;";' src/game-0.19.0.js
+      - run: grep -F 'patch0190(finalSource)' src/game-0.19.0.js
+      - run: grep -F 'new THREE.PlaneGeometry(1400, 1400, 86, 86)' src/patch-0.19.0.js
       - name: Verify Reefed can accelerate from rest at high FPS
         run: >-
           node -e 'let speed=0; const dt=1/120, sailPower=0.50, mobility=1, speedControl=1;
