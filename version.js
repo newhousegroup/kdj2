@@ -1,1 +1,1 @@
-window.KDJ_VERSION = "0.17.4";
+window.KDJ_VERSION = "0.17.5";
