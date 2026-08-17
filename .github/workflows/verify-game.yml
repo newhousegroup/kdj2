@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --check src/game-0.19.3.js
       - run: node --check src/game-0.19.2.js
       - run: node --check src/game-0.19.1.js
       - run: node --check src/game-0.19.0.js
@@ -58,12 +59,13 @@ jobs:
       - run: node --check src/patch-0.19.0.js
       - run: node --check src/patch-0.19.1.js
       - run: node --check src/patch-0.19.2.js
-      - run: grep -F 'const SWORD_CONE_45 = "    if (facing < 0.7071067811865476 || distance >= targetDistance) continue;";' src/game-0.19.2.js
-      - run: grep -F 'const SPEED_SNAP_IDLE_ONLY = "    if (!speedControl && Math.abs(ship.speed) < 0.025) ship.speed = 0;";' src/game-0.19.2.js
-      - run: grep -F 'finalSource = patch0192(finalSource);' src/game-0.19.2.js
-      - run: grep -F 'vec3 base = vec3(0.010, 0.105, 0.150);' src/patch-0.19.2.js
-      - run: grep -F 'p.z += h * 1.12;' src/patch-0.19.2.js
-      - run: grep -F 'fine normal ripple removal' src/patch-0.19.2.js
+      - run: node --check src/patch-0.19.3.js
+      - run: grep -F 'const SWORD_CONE_45 = "    if (facing < 0.7071067811865476 || distance >= targetDistance) continue;";' src/game-0.19.3.js
+      - run: grep -F 'const SPEED_SNAP_IDLE_ONLY = "    if (!speedControl && Math.abs(ship.speed) < 0.025) ship.speed = 0;";' src/game-0.19.3.js
+      - run: grep -F 'finalSource = patch0193(finalSource);' src/game-0.19.3.js
+      - run: grep -F 'new THREE.MeshBasicMaterial({ color: 0xffffee, fog: false, toneMapped: false })' src/patch-0.19.3.js
+      - run: grep -F 'function makePeriodHullGeometry()' src/patch-0.19.3.js
+      - run: grep -F 'function makePeriodDeckGeometry()' src/patch-0.19.3.js
       - name: Verify Reefed can accelerate from rest at high FPS
         run: >-
           node -e 'let speed=0; const dt=1/120, sailPower=0.50, mobility=1, speedControl=1;
@@ -76,5 +78,5 @@ jobs:
           }
           if(!(speed>0.5)) throw new Error(`Reefed failed to accelerate from rest: ${speed}`);
           console.log(`Reefed 120fps startup OK: ${speed.toFixed(3)}`);'
-      - name: Verify 0.19.2 ocean patch materializes
-        run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.3.js src/patch-2.0.0-beta1.js src/patch-2.0.0-beta2.js src/patch-2.0.0-beta3.js src/patch-2.0.0-beta4.js src/patch-0.17.0.js src/patch-0.17.1.js src/patch-0.17.3.js src/patch-0.17.4.js src/patch-0.17.5.js src/patch-0.17.6.js src/patch-0.18.0.js src/patch-0.18.1.js src/patch-0.18.3.js src/patch-0.19.0.js src/patch-0.19.1.js src/patch-0.19.2.js
+      - name: Verify 0.19.3 visual patch materializes
+        run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.3.js src/patch-2.0.0-beta1.js src/patch-2.0.0-beta2.js src/patch-2.0.0-beta3.js src/patch-2.0.0-beta4.js src/patch-0.17.0.js src/patch-0.17.1.js src/patch-0.17.3.js src/patch-0.17.4.js src/patch-0.17.5.js src/patch-0.17.6.js src/patch-0.18.0.js src/patch-0.18.1.js src/patch-0.18.3.js src/patch-0.19.0.js src/patch-0.19.1.js src/patch-0.19.2.js src/patch-0.19.3.js
