@@ -197,14 +197,9 @@ function renderState(now = performance.now()) {
   // Render the local guest at the predicted coordinates. Remote sailors and the
   // host still render directly from authoritative state/smoothing as before.
   replaceRequired(
-    `    const y = climbingPlayerY(p);
-    mesh.position.lerp(toWorld(state.ships[p.ship], p.x, p.z, y), p.id === localId ? 1 : 0.35);
-    mesh.rotation.y = state.ships[p.ship].heading + (p.yaw || 0) + Math.PI;`,
-    `    const y = climbingPlayerY(p);
-    const renderPosition = guestRenderCoordinates(p);
-    mesh.position.lerp(toWorld(state.ships[p.ship], renderPosition.x, renderPosition.z, y), p.id === localId ? 1 : 0.35);
-    const renderYaw = (!network.isHost && p.id === localId) ? viewYaw : (p.yaw || 0);
-    mesh.rotation.y = state.ships[p.ship].heading + renderYaw + Math.PI;`,
+    `    mesh.position.lerp(toWorld(state.ships[p.ship], p.x, p.z, y), p.id === localId ? 1 : 0.35);`,
+    `    const renderPosition = guestRenderCoordinates(p);
+    mesh.position.lerp(toWorld(state.ships[p.ship], renderPosition.x, renderPosition.z, y), p.id === localId ? 1 : 0.35);`,
     "predicted local player rendering"
   );
 
