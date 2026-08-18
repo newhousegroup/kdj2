@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --check src/game-0.19.5.js
       - run: node --check src/game-0.19.4.js
       - run: node --check src/game-0.19.3.js
       - run: node --check src/game-0.19.2.js
@@ -62,14 +63,20 @@ jobs:
       - run: node --check src/patch-0.19.2.js
       - run: node --check src/patch-0.19.3.js
       - run: node --check src/patch-0.19.4.js
-      - run: grep -F 'const SWORD_CONE_45 = "    if (facing < 0.7071067811865476 || distance >= targetDistance) continue;";' src/game-0.19.4.js
-      - run: grep -F 'const SPEED_SNAP_IDLE_ONLY = "    if (!speedControl && Math.abs(ship.speed) < 0.025) ship.speed = 0;";' src/game-0.19.4.js
-      - run: grep -F 'finalSource = patch0194(finalSource);' src/game-0.19.4.js
-      - run: >-
-          grep -F 'new THREE.MeshBasicMaterial({ color: 0xffffee, fog: false, toneMapped: false })' src/patch-0.19.4.js
-      - name: Ensure 0.19.3 hull patch is not in the 0.19.4 launcher
+      - run: node --check src/patch-0.19.5.js
+      - run: grep -F 'const SWORD_CONE_45 = "    if (facing < 0.7071067811865476 || distance >= targetDistance) continue;";' src/game-0.19.5.js
+      - run: grep -F 'const SPEED_SNAP_IDLE_ONLY = "    if (!speedControl && Math.abs(ship.speed) < 0.025) ship.speed = 0;";' src/game-0.19.5.js
+      - run: grep -F 'finalSource = patch0195(finalSource);' src/game-0.19.5.js
+      - run: grep -F 'const enemyRight = enemyDx * rightX + enemyDz * rightZ;' src/patch-0.19.5.js
+      - run: grep -F 'function shipConditionLabel(mobility)' src/patch-0.19.5.js
+      - run: grep -F 'Keep her afloat.' src/patch-0.19.5.js
+      - run: grep -F 'damageSmoke.visible = damageStrength > 0.01' src/patch-0.19.5.js
+      - name: Verify enemy compass local-space direction
         run: >-
-          if grep -F 'patch-0.19.3.js' src/game-0.19.4.js; then echo '0.19.3 hull patch leaked into 0.19.4'; exit 1; fi
+          node -e 'function angle(h,dx,dz){const fx=-Math.sin(h),fz=-Math.cos(h),rx=Math.cos(h),rz=-Math.sin(h);return Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz)*180/Math.PI;} const eps=1e-9; if(Math.abs(angle(0,0,-10))>eps) throw new Error("forward not centered"); if(!(angle(0,10,0)>89)) throw new Error("starboard not right"); if(!(angle(0,-10,0)<-89)) throw new Error("port not left"); if(Math.abs(angle(-Math.PI/2,10,0))>eps) throw new Error("east-facing bow not centered on east target"); console.log("enemy compass local-space direction OK");'
+      - name: Ensure 0.19.3 hull patch is still absent
+        run: >-
+          if grep -F 'patch-0.19.3.js' src/game-0.19.5.js; then echo '0.19.3 hull patch leaked into 0.19.5'; exit 1; fi
       - name: Verify Reefed can accelerate from rest at high FPS
         run: >-
           node -e 'let speed=0; const dt=1/120, sailPower=0.50, mobility=1, speedControl=1;
@@ -82,5 +89,5 @@ jobs:
           }
           if(!(speed>0.5)) throw new Error(`Reefed failed to accelerate from rest: ${speed}`);
           console.log(`Reefed 120fps startup OK: ${speed.toFixed(3)}`);'
-      - name: Verify 0.19.4 sun-only rollback materializes
-        run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.3.js src/patch-2.0.0-beta1.js src/patch-2.0.0-beta2.js src/patch-2.0.0-beta3.js src/patch-2.0.0-beta4.js src/patch-0.17.0.js src/patch-0.17.1.js src/patch-0.17.3.js src/patch-0.17.4.js src/patch-0.17.5.js src/patch-0.17.6.js src/patch-0.18.0.js src/patch-0.18.1.js src/patch-0.18.3.js src/patch-0.19.0.js src/patch-0.19.1.js src/patch-0.19.2.js src/patch-0.19.4.js
+      - name: Verify 0.19.5 player feedback patch materializes
+        run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.3.js src/patch-2.0.0-beta1.js src/patch-2.0.0-beta2.js src/patch-2.0.0-beta3.js src/patch-2.0.0-beta4.js src/patch-0.17.0.js src/patch-0.17.1.js src/patch-0.17.3.js src/patch-0.17.4.js src/patch-0.17.5.js src/patch-0.17.6.js src/patch-0.18.0.js src/patch-0.18.1.js src/patch-0.18.3.js src/patch-0.19.0.js src/patch-0.19.1.js src/patch-0.19.2.js src/patch-0.19.4.js src/patch-0.19.5.js
