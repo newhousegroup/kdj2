@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: node --check src/game-0.19.7.js
       - run: node --check src/game-0.19.6.js
       - run: node --check src/game-0.19.5.js
       - run: node --check src/game-0.19.4.js
@@ -66,30 +67,18 @@ jobs:
       - run: node --check src/patch-0.19.4.js
       - run: node --check src/patch-0.19.5.js
       - run: node --check src/patch-0.19.6.js
-      - run: grep -F 'finalSource = patch0196(finalSource);' src/game-0.19.6.js
-      - run: grep -F 'Protect ${roomShipName(p.team)}, keep her afloat • capture the enemy flag or destroy their ship.' src/patch-0.19.6.js
-      - run: grep -F 'state.shipNames = makeRoomShipNames(roomCode);' src/patch-0.19.6.js
-      - run: grep -F 'initialState(localId, room.name, room.code);' src/patch-0.19.6.js
-      - name: Verify all 1296 room codes map to unique ship-name pairs
+      - run: grep -F 'finalSource = patch0195(finalSource);' src/game-0.19.7.js
+      - name: Ensure 0.19.6 patch is not in the 0.19.7 launcher
         run: >-
-          node -e 'const seen=new Set(); for(let n=0;n<1296;n++){const b=n%36,f=Math.floor(n/36)%36,key=b+":"+f;if(seen.has(key))throw new Error("duplicate ship pair "+key);seen.add(key)} if(seen.size!==1296)throw new Error("expected 1296 unique pairs");console.log("1296 unique ship-name pairs OK");'
-      - name: Verify enemy compass local-space direction
-        run: >-
-          node -e 'function angle(h,dx,dz){const fx=-Math.sin(h),fz=-Math.cos(h),rx=Math.cos(h),rz=-Math.sin(h);return Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz)*180/Math.PI;} const eps=1e-9; if(Math.abs(angle(0,0,-10))>eps) throw new Error("forward not centered"); if(!(angle(0,10,0)>89)) throw new Error("starboard not right"); if(!(angle(0,-10,0)<-89)) throw new Error("port not left"); if(Math.abs(angle(-Math.PI/2,10,0))>eps) throw new Error("east-facing bow not centered on east target"); console.log("enemy compass local-space direction OK");'
+          if grep -F 'patch-0.19.6.js' src/game-0.19.7.js; then echo '0.19.6 patch leaked into 0.19.7'; exit 1; fi
       - name: Ensure 0.19.3 hull patch is still absent
         run: >-
-          if grep -F 'patch-0.19.3.js' src/game-0.19.6.js; then echo '0.19.3 hull patch leaked into 0.19.6'; exit 1; fi
+          if grep -F 'patch-0.19.3.js' src/game-0.19.7.js; then echo '0.19.3 hull patch leaked into 0.19.7'; exit 1; fi
+      - name: Verify enemy compass local-space direction
+        run: >-
+          node -e 'function angle(h,dx,dz){const fx=-Math.sin(h),fz=-Math.cos(h),rx=Math.cos(h),rz=-Math.sin(h);return Math.atan2(dx*rx+dz*rz,dx*fx+dz*fz)*180/Math.PI;} const eps=1e-9; if(Math.abs(angle(0,0,-10))>eps) throw new Error("forward not centered"); if(!(angle(0,10,0)>89)) throw new Error("starboard not right"); if(!(angle(0,-10,0)<-89)) throw new Error("port not left"); console.log("enemy compass local-space direction OK");'
       - name: Verify Reefed can accelerate from rest at high FPS
         run: >-
-          node -e 'let speed=0; const dt=1/120, sailPower=0.50, mobility=1, speedControl=1;
-          for(let i=0;i<120;i++){
-            const maxForward=6.03*sailPower*mobility;
-            if(speedControl>0 && speed<maxForward) speed=Math.min(maxForward,speed+1.72*sailPower*mobility*dt);
-            const drag=0.06;
-            if(Math.abs(speed)>0) speed-=Math.sign(speed)*Math.min(Math.abs(speed),drag*dt);
-            if(!speedControl && Math.abs(speed)<0.025) speed=0;
-          }
-          if(!(speed>0.5)) throw new Error(`Reefed failed to accelerate from rest: ${speed}`);
-          console.log(`Reefed 120fps startup OK: ${speed.toFixed(3)}`);'
-      - name: Verify 0.19.6 room ship-name patch materializes
-        run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.3.js src/patch-2.0.0-beta1.js src/patch-2.0.0-beta2.js src/patch-2.0.0-beta3.js src/patch-2.0.0-beta4.js src/patch-0.17.0.js src/patch-0.17.1.js src/patch-0.17.3.js src/patch-0.17.4.js src/patch-0.17.5.js src/patch-0.17.6.js src/patch-0.18.0.js src/patch-0.18.1.js src/patch-0.18.3.js src/patch-0.19.0.js src/patch-0.19.1.js src/patch-0.19.2.js src/patch-0.19.4.js src/patch-0.19.5.js src/patch-0.19.6.js
+          node -e 'let speed=0; const dt=1/120, sailPower=0.50, mobility=1, speedControl=1; for(let i=0;i<120;i++){const maxForward=6.03*sailPower*mobility;if(speedControl>0&&speed<maxForward)speed=Math.min(maxForward,speed+1.72*sailPower*mobility*dt);const drag=0.06;if(Math.abs(speed)>0)speed-=Math.sign(speed)*Math.min(Math.abs(speed),drag*dt);if(!speedControl&&Math.abs(speed)<0.025)speed=0;} if(!(speed>0.5))throw new Error(`Reefed failed: ${speed}`); console.log(`Reefed OK: ${speed.toFixed(3)}`);'
+      - name: Verify 0.19.7 rollback materializes exact 0.19.5 patch chain
+        run: node scripts/verify-loader.mjs src/game-0.9.3.js src/patch-0.10.0.js src/patch-0.11.0.js src/patch-0.11.1.js src/patch-0.11.2.js src/patch-0.11.3.js src/patch-0.12.0.js src/patch-0.12.1.js src/patch-0.14.3.js src/patch-2.0.0-beta1.js src/patch-2.0.0-beta2.js src/patch-2.0.0-beta3.js src/patch-2.0.0-beta4.js src/patch-0.17.0.js src/patch-0.17.1.js src/patch-0.17.3.js src/patch-0.17.4.js src/patch-0.17.5.js src/patch-0.17.6.js src/patch-0.18.0.js src/patch-0.18.1.js src/patch-0.18.3.js src/patch-0.19.0.js src/patch-0.19.1.js src/patch-0.19.2.js src/patch-0.19.4.js src/patch-0.19.5.js
