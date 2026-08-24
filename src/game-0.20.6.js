@@ -1,4 +1,4 @@
-import { patchGameSource as patch0206 } from "./patch-0.20.6.js?v=0.20.6-playerfix";
+import { patchGameSource as patch0206 } from "./patch-0.20.6.js?v=0.20.6-hotfix1";
 
 const NativeBlob = globalThis.Blob;
 let patchedFinalGame = false;
