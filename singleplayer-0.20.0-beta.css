@@ -1,0 +1,6 @@
+.singleplayer-button { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.beta-badge { padding: 2px 6px; border-radius: 999px; background: rgba(255,255,255,.1); color: #b9c6cf; font-size: 9px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+body.kdj-singleplayer #currentRoomCode { display: none; }
+body.kdj-singleplayer #peopleCount { font-size: 0; }
+body.kdj-singleplayer #peopleCount::after { content: "1 vs 1"; font-size: 11px; }
+body.kdj-singleplayer #connectionDot.direct { background: #43a465; box-shadow: 0 0 0 3px rgba(67,164,101,.08); }
