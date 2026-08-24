@@ -16,20 +16,31 @@ jobs:
       - run: node --check src/patch-0.20.6.js
       - run: node --check src/game-0.20.6.js
       - run: grep -F 'window.KDJ_VERSION = "0.20.6";' version.js
-      - run: grep -F 'src/game-0.20.6.js?v=0.20.6' index.html
-      - name: Verify unified steering patch
+      - run: grep -F 'src/game-0.20.6.js?v=0.20.6-hotfix1' index.html
+      - name: Verify 0.20.6 patch applies to real 0.20.2 source shapes
         run: |
-          grep -F 'a: keys.a || touch.x < -0.18' src/patch-0.20.6.js
-          grep -F 'd: keys.d || touch.x > 0.18' src/patch-0.20.6.js
-          grep -F 'ship.heading -= steer * 0.42' src/patch-0.20.6.js
-          if grep -F 'const helmDirection = ship.speed >= 0 ? -1 : 1;' src/patch-0.20.6.js | grep -v "replaceRequired"; then
-            true
-          fi
-      - name: Verify bow-relative steering numerically
-        run: >-
-          node -e 'for (const speed of [-4,-0.01,0,0.01,4]) { const leftSteer=-1, rightSteer=1; const leftDelta=-leftSteer, rightDelta=-rightSteer; if (!(leftDelta>0 && rightDelta<0)) throw new Error(`steering reversed at speed ${speed}`); } console.log("left/right stable across signed speed");'
-      - name: Verify scoreboard remains fallback-only
-        run: |
-          grep -F 'scoreboard default-objective priority' src/patch-0.20.6.js
-          grep -F 'else {' src/patch-0.20.6.js
-          grep -F 'British ${Number(state.score?.british || 0)} - ${Number(state.score?.french || 0)} French' src/patch-0.20.6.js
+          node --input-type=module <<'NODE'
+          import { patchGameSource } from './src/patch-0.20.6.js';
+
+          const inputBlock = `    // Desktop keyboard steering/strafe correction: testers reported A/D mirrored.
+              // Swap keyboard A/D only; keep touch joystick left/right semantics unchanged.
+              a: keys.d || touch.x < -0.18,
+              d: keys.a || touch.x > 0.18,`;
+          const badVector = `  const dx = strafe * Math.cos(yaw) - forward * Math.sin(yaw);
+            const dz = strafe * Math.sin(yaw) - forward * Math.cos(yaw);`;
+          const scoreFirst = `  if ((state.round || 1) > 1) ui.objective.textContent = \`British \${Number(state.score?.british || 0)} - \${Number(state.score?.french || 0)} French\`;
+            else if (p.role === "captain") ui.objective.textContent = \`Captain of \${TEAM[p.ship].ship} · WASD to steer · E to leave helm\`;`;
+          const mission = `  else ui.objective.textContent = \`Protect \${TEAM[p.team].ship} · capture the enemy flag or destroy their ship.\`;`;
+
+          const source = [inputBlock, badVector, badVector, scoreFirst, mission].join('\n');
+          const out = patchGameSource(source);
+
+          if (!out.includes('a: keys.a || touch.x < -0.18')) throw new Error('keyboard left mapping not fixed');
+          if (!out.includes('d: keys.d || touch.x > 0.18')) throw new Error('keyboard right mapping not fixed');
+          const fixedVector = `  const dx = strafe * Math.cos(yaw) - forward * Math.sin(yaw);
+            const dz = -strafe * Math.sin(yaw) - forward * Math.cos(yaw);`;
+          if (out.split(fixedVector).length - 1 !== 2) throw new Error('authoritative/prediction strafe vectors not both fixed');
+          if (out.includes('if ((state.round || 1) > 1) ui.objective.textContent')) throw new Error('scoreboard still overrides contextual objectives');
+          if (!out.includes('else ui.objective.textContent = (state.round || 1) > 1')) throw new Error('scoreboard fallback missing');
+          console.log('0.20.6 patch transforms successfully');
+          NODE
