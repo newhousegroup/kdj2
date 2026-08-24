@@ -15,13 +15,17 @@ jobs:
           node-version: 22
       - run: node --check src/singleplayer-0.20.1.js
       - run: node --check src/singleplayer-0.20.1-controller.js
+      - run: node --check src/singleplayer-0.20.1-inputfix.js
       - run: node --check src/game-0.20.1.js
       - run: grep -F 'window.KDJ_VERSION = "0.20.1";' version.js
       - run: grep -F 'src/singleplayer-0.20.1.js?v=0.20.1' index.html
       - run: grep -F 'src/game-0.20.1.js?v=0.20.1' index.html
       - run: grep -F 'singleplayer-0.20.1-controller.js?v=0.20.1' src/game-0.20.1.js
+      - run: grep -F 'singleplayer-0.20.1-inputfix.js?v=0.20.1' src/game-0.20.1.js
       - name: Verify bow-aligned pursuit heading
         run: grep -F 'const toward = Math.atan2(-dx, -dz);' src/singleplayer-0.20.1-controller.js
+      - name: Verify bot gets current helm A-D compensation
+        run: grep -F '[fixedInput.a, fixedInput.d] = [fixedInput.d, fixedInput.a];' src/singleplayer-0.20.1-inputfix.js
       - name: Verify rigging is reached physically
         run: |
           grep -F 'const RIG = { x: -2.15, z: -2.2 };' src/singleplayer-0.20.1-controller.js
