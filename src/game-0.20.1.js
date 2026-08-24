@@ -1,7 +1,8 @@
-// 0.20.1 keeps the stable 0.19.9 gameplay build. The single-player controller
-// loaded before this module supplies the revised bot steering and physical rigging
-// behavior without changing multiplayer gameplay.
+// 0.20.1 keeps the stable 0.19.9 gameplay build. The single-player beta shim is
+// loaded by index.html; this controller replaces its think-loop with the corrected
+// bow-heading logic and physical rigging behavior before gameplay boots.
 try {
+  await import("./singleplayer-0.20.1-controller.js?v=0.20.1");
   await import("./game-0.19.9.js?v=0.19.9");
 } catch (error) {
   document.querySelector("#loadingScreen")?.remove();
