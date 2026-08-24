@@ -1,0 +1,38 @@
+name: Verify 0.20.1
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-0201:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/singleplayer-0.20.1.js
+      - run: node --check src/singleplayer-0.20.1-controller.js
+      - run: node --check src/game-0.20.1.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.1";' version.js
+      - run: grep -F 'src/singleplayer-0.20.1.js?v=0.20.1' index.html
+      - run: grep -F 'src/game-0.20.1.js?v=0.20.1' index.html
+      - run: grep -F 'singleplayer-0.20.1-controller.js?v=0.20.1' src/game-0.20.1.js
+      - name: Verify bow-aligned pursuit heading
+        run: grep -F 'const toward = Math.atan2(-dx, -dz);' src/singleplayer-0.20.1-controller.js
+      - name: Verify rigging is reached physically
+        run: |
+          grep -F 'const RIG = { x: -2.15, z: -2.2 };' src/singleplayer-0.20.1-controller.js
+          grep -F 'const walk = moveTo(ai, p, RIG.x, RIG.z);' src/singleplayer-0.20.1-controller.js
+          grep -F 'ai.rigSeq += 1;' src/singleplayer-0.20.1-controller.js
+      - name: Reject magical sailing and steering writes
+        run: |
+          if grep -E 'ship\.(sailTrim|sailDecayAt|heading|speed)[[:space:]]*=' src/singleplayer-0.20.1-controller.js; then
+            echo '0.20.1 bot must use stations/inputs instead of direct sailing writes'
+            exit 1
+          fi
+      - name: Verify pursuit convention numerically
+        run: >-
+          node -e 'const h=(dx,dz)=>Math.atan2(-dx,-dz); const forward=h(-300,0); if(Math.abs(forward-Math.PI/2)>1e-9) throw new Error(`French should face west, got ${forward}`); const vx=-Math.sin(forward), vz=-Math.cos(forward); if(vx>-0.999||Math.abs(vz)>1e-9) throw new Error(`bow vector wrong: ${vx},${vz}`); console.log("bow pursuit OK");'
