@@ -19,12 +19,20 @@ export function patchGameSource(source) {
     'increment match score'
   );
 
-  // Battle 1 keeps the original mission copy, minus "keep her afloat". From
-  // battle 2 onward the ordinary top pill becomes the persistent match score.
+  // From battle 2 onward the top objective pill is the scoreboard, even while a
+  // player is occupying a station. Battle 1 keeps all existing contextual copy.
+  replaceRequired(
+    '  if (p.role === "captain") ui.objective.textContent = `Captain of ${TEAM[p.ship].ship} · WASD to steer · E to leave helm`;',
+    '  if ((state.round || 1) > 1) ui.objective.textContent = `British ${Number(state.score?.british || 0)} - ${Number(state.score?.french || 0)} French`;\n  else if (p.role === "captain") ui.objective.textContent = `Captain of ${TEAM[p.ship].ship} · WASD to steer · E to leave helm`;',
+    'persistent later-round scoreboard'
+  );
+
+  // On the first battle remove only the requested phrase; the rest of the mission
+  // wording remains unchanged.
   replaceRequired(
     '  else ui.objective.textContent = `Protect ${TEAM[p.team].ship} · keep her afloat · capture the enemy flag or destroy their ship.`;',
-    '  else ui.objective.textContent = (state.round || 1) > 1\n    ? `British ${Number(state.score?.british || 0)} - ${Number(state.score?.french || 0)} French`\n    : `Protect ${TEAM[p.team].ship} · capture the enemy flag or destroy their ship.`;',
-    'round-one objective and later scoreboard'
+    '  else ui.objective.textContent = `Protect ${TEAM[p.team].ship} · capture the enemy flag or destroy their ship.`;',
+    'round-one mission copy'
   );
 
   return source;
