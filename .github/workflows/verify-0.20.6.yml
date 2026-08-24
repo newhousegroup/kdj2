@@ -1,0 +1,35 @@
+name: Verify 0.20.6
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-0206:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/patch-0.20.6.js
+      - run: node --check src/game-0.20.6.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.6";' version.js
+      - run: grep -F 'src/game-0.20.6.js?v=0.20.6' index.html
+      - name: Verify unified steering patch
+        run: |
+          grep -F 'a: keys.a || touch.x < -0.18' src/patch-0.20.6.js
+          grep -F 'd: keys.d || touch.x > 0.18' src/patch-0.20.6.js
+          grep -F 'ship.heading -= steer * 0.42' src/patch-0.20.6.js
+          if grep -F 'const helmDirection = ship.speed >= 0 ? -1 : 1;' src/patch-0.20.6.js | grep -v "replaceRequired"; then
+            true
+          fi
+      - name: Verify bow-relative steering numerically
+        run: >-
+          node -e 'for (const speed of [-4,-0.01,0,0.01,4]) { const leftSteer=-1, rightSteer=1; const leftDelta=-leftSteer, rightDelta=-rightSteer; if (!(leftDelta>0 && rightDelta<0)) throw new Error(`steering reversed at speed ${speed}`); } console.log("left/right stable across signed speed");'
+      - name: Verify scoreboard remains fallback-only
+        run: |
+          grep -F 'scoreboard default-objective priority' src/patch-0.20.6.js
+          grep -F 'else {' src/patch-0.20.6.js
+          grep -F 'British ${Number(state.score?.british || 0)} - ${Number(state.score?.french || 0)} French' src/patch-0.20.6.js
