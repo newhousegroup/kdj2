@@ -1,0 +1,69 @@
+name: Verify 0.20.9
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-0209:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax checks
+        run: |
+          node --check src/boot-0.20.9.js
+          node --check src/singleplayer-0.20.9-ui.js
+          node --check src/singleplayer-0.20.9-easy.js
+          node --check src/patch-0.20.9.js
+          node --check src/game-0.20.9.js
+          node --check src/patch-0.20.6.js
+
+      - name: Verify active 0.20.9 wiring
+        run: |
+          grep -F 'window.KDJ_VERSION = "0.20.9";' version.js
+          grep -F '<span class="version">0.20.9</span>' index.html
+          grep -F 'src/boot-0.20.9.js?v=0.20.9' index.html
+          grep -F 'src/singleplayer-0.20.9-easy.js?v=0.20.9' index.html
+          grep -F 'src/singleplayer-0.20.9-ui.js?v=0.20.9' index.html
+          grep -F 'src/game-0.20.9.js?v=0.20.9' index.html
+          if grep -F 'singleplayer-0.20.4-easy.js' index.html; then echo 'old Easy modifier still active'; exit 1; fi
+          if grep -F 'singleplayer-0.20.5-easy-rig.js' index.html; then echo 'old rig modifier still active'; exit 1; fi
+
+      - name: Verify KdJ2 boot branding and menu reset patch
+        run: |
+          node --input-type=module <<'NODE'
+          import { patchGameSource } from './src/patch-0.20.9.js';
+          let source = `function returnToMenu(message = "") {
+            ui.lobbyHome.classList.remove("hidden");
+            ui.joinPanel.classList.add("hidden");
+            joinCode = [];
+          }
+          function processPlayer(p, input, dt) {}
+          function updateObjective(p) {}
+          function showBootError(error) {
+            console.error("KDJ2 0.9.3 boot failed", error);
+            const status = document.querySelector("#lobbyStatus");
+            if (status) status.textContent = \`Game failed to load: \${error?.message || error}\`;
+          }`;
+          source = patchGameSource(source);
+          if (!source.includes('console.error("KdJ2 boot failed", error);')) throw new Error('boot label not normalized');
+          if (!source.includes('status.textContent = "KdJ2 boot failed";')) throw new Error('visible boot label not normalized');
+          if (!source.includes('document.querySelector("#botPanel")?.classList.add("hidden");')) throw new Error('bot panel not reset on return');
+          console.log('0.20.9 boot/menu patch OK');
+          NODE
+
+      - name: Verify Easy profile
+        run: |
+          grep -F 'const THINK_DELAY_MS = 350;' src/singleplayer-0.20.9-easy.js
+          grep -F 'const CANNON_AIM_ERROR = 7 * Math.PI / 180;' src/singleplayer-0.20.9-easy.js
+          grep -F 'now + 1000 + Math.random() * 2000' src/singleplayer-0.20.9-easy.js
+          grep -F 'Math.random() < 0.34' src/singleplayer-0.20.9-easy.js
+          grep -F 'now - easy.lastSwordAt >= 1500' src/singleplayer-0.20.9-easy.js
+          grep -F '700 + Math.random() * 800' src/singleplayer-0.20.9-easy.js
+          grep -F 'easy.lostTargetUntil' src/singleplayer-0.20.9-easy.js
+          grep -F 'easy.oversteerUntil' src/singleplayer-0.20.9-easy.js
