@@ -1,0 +1,36 @@
+name: Verify 0.20.4
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-0204:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/singleplayer-0.20.4-ui.js
+      - run: node --check src/singleplayer-0.20.4-easy.js
+      - run: node --check src/game-0.20.4.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.4";' version.js
+      - name: Verify Join footnote removal
+        run: '! grep -F "Drag to look · pinch in third person to zoom" index.html'
+      - name: Verify Easy and Medium menu options
+        run: |
+          grep -F 'data-difficulty="easy"' index.html
+          grep -F 'data-difficulty="medium"' index.html
+          ! grep -F 'difficulty-description' index.html
+      - name: Verify Easy AI is active only when selected
+        run: |
+          grep -F 'window.__KDJ_BOT_DIFFICULTY__ !== "easy"' src/singleplayer-0.20.4-easy.js
+          grep -F 'state.nextNavAt = now + 260;' src/singleplayer-0.20.4-easy.js
+          grep -F 'state.swordAttempts % 2 === 0' src/singleplayer-0.20.4-easy.js
+      - name: Verify 0.20.4 launcher
+        run: |
+          grep -F 'src/singleplayer-0.20.4-easy.js?v=0.20.4' index.html
+          grep -F 'src/singleplayer-0.20.4-ui.js?v=0.20.4' index.html
+          grep -F 'src/game-0.20.4.js?v=0.20.4' index.html
