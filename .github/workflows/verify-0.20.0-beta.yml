@@ -1,0 +1,24 @@
+name: Verify 0.20.0-beta
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-beta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/singleplayer-0.20.0-beta.js
+      - run: node --check src/game-0.20.0-beta.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.0-beta";' version.js
+      - run: grep -F 'id="singlePlayerBtn"' index.html
+      - run: grep -F 'src/singleplayer-0.20.0-beta.js?v=0.20.0-beta' index.html
+      - run: grep -F 'src/game-0.20.0-beta.js?v=0.20.0-beta' index.html
+      - run: grep -F 'const BOT_ID = "kdj2-local-bot";' src/singleplayer-0.20.0-beta.js
+      - run: grep -F 'network.callbacks.onPacket?.(BOT_ID, { type: "spawn" });' src/singleplayer-0.20.0-beta.js
+      - run: grep -F 'flag.input.interactHeld = true;' src/singleplayer-0.20.0-beta.js
