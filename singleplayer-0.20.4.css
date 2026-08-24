@@ -1,0 +1,36 @@
+.connection-dot.singleplayer {
+  background: #9b73e6;
+  box-shadow: 0 0 0 3px rgba(155, 115, 230, 0.12), 0 0 12px rgba(155, 115, 230, 0.55);
+}
+
+#botPanel .small-heading {
+  margin-top: 2px;
+}
+
+#botPanel .difficulty-option {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid #33414c;
+  border-radius: 10px;
+  background: rgba(10,24,34,.9);
+  color: #e9edf0;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 100ms ease, background 100ms ease, border-color 100ms ease;
+}
+
+#botPanel .difficulty-option:hover {
+  transform: translateY(-1px);
+}
+
+#botPanel .difficulty-option.selected {
+  border-color: rgba(155, 115, 230, 0.75);
+  background: rgba(155, 115, 230, 0.12);
+}
+
+#botPanel .difficulty-name {
+  font-size: 13px;
+  font-weight: 760;
+}
