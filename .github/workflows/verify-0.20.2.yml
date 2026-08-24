@@ -1,0 +1,60 @@
+name: Verify 0.20.2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-0202:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/patch-0.20.2.js
+      - run: node --check src/game-0.20.2.js
+      - run: node --check src/singleplayer-0.20.2-ui.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.2";' version.js
+      - run: grep -F 'id="singlePlayerSetupBtn"' index.html
+      - run: grep -F 'src/singleplayer-0.20.2-ui.js?v=0.20.2' index.html
+      - run: grep -F 'src/game-0.20.2.js?v=0.20.2' index.html
+      - run: grep -F 'Medium' src/singleplayer-0.20.2-ui.js
+      - run: grep -F 'window.__KDJ_BOT_DIFFICULTY__ = DIFFICULTY;' src/singleplayer-0.20.2-ui.js
+      - run: grep -F '.kdj-singleplayer .connection-dot.direct' singleplayer-0.20.2.css
+      - run: grep -F 'score: { british: 0, french: 0 }' src/patch-0.20.2.js
+      - run: grep -F 'state.score[winner]' src/patch-0.20.2.js
+      - run: grep -F 'British ${Number(state.score?.british || 0)} - ${Number(state.score?.french || 0)} French' src/patch-0.20.2.js
+      - name: Verify 0.20.2 patch against stable generated game
+        run: >-
+          node scripts/verify-loader.mjs src/game-0.9.3.js
+          src/patch-0.10.0.js
+          src/patch-0.11.0.js
+          src/patch-0.11.1.js
+          src/patch-0.11.2.js
+          src/patch-0.11.3.js
+          src/patch-0.12.0.js
+          src/patch-0.12.1.js
+          src/patch-0.14.3.js
+          src/patch-2.0.0-beta1.js
+          src/patch-2.0.0-beta2.js
+          src/patch-2.0.0-beta3.js
+          src/patch-2.0.0-beta4.js
+          src/patch-0.17.0.js
+          src/patch-0.17.1.js
+          src/patch-0.17.3.js
+          src/patch-0.17.4.js
+          src/patch-0.17.5.js
+          src/patch-0.17.6.js
+          src/patch-0.18.0.js
+          src/patch-0.18.1.js
+          src/patch-0.18.3.js
+          src/patch-0.19.0.js
+          src/patch-0.19.1.js
+          src/patch-0.19.2.js
+          src/patch-0.19.4.js
+          src/patch-0.19.5.js
+          src/patch-0.19.8.js
+          src/patch-0.19.9.js
+          src/patch-0.20.2.js
