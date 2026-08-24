@@ -1,0 +1,35 @@
+name: Verify 0.20.10
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-02010:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/boot-0.20.10.js
+      - run: node --check src/game-0.20.10.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.10";' version.js
+      - run: grep -F 'id="loadingProgressText">Loading... (0%)</span>' index.html
+      - run: grep -F 'src/boot-0.20.10.js?v=0.20.10' index.html
+      - run: grep -F 'src/game-0.20.10.js?v=0.20.10' index.html
+      - name: Verify progress is completion-driven
+        run: |
+          grep -F 'const TASKS = new Set([' src/boot-0.20.10.js
+          grep -F 'performance.getEntriesByType?.("resource")' src/boot-0.20.10.js
+          grep -F 'document.fonts.ready.then' src/boot-0.20.10.js
+          grep -F 'complete("first-frame")' src/boot-0.20.10.js
+          grep -F 'complete("game-module")' src/game-0.20.10.js
+          if grep -E 'setInterval|setTimeout' src/boot-0.20.10.js; then
+            echo 'Loading progress must not use a fake timer.'
+            exit 1
+          fi
+      - name: Verify 20 real progress tasks
+        run: >-
+          node -e 'const fs=require("fs");const s=fs.readFileSync("src/boot-0.20.10.js","utf8");const m=s.match(/const TASKS = new Set\(\[([\s\S]*?)\]\);/);if(!m)throw new Error("TASKS missing");const tasks=[...m[1].matchAll(/"([^"]+)"/g)].map(x=>x[1]);if(tasks.length!==20)throw new Error(`expected 20 tasks, got ${tasks.length}`);if(new Set(tasks).size!==20)throw new Error("duplicate progress task");console.log("20 progress tasks OK");'
