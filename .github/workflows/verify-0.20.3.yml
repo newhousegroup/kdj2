@@ -1,0 +1,33 @@
+name: Verify 0.20.3
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-0203:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/singleplayer-0.20.3-status.js
+      - run: node --check src/singleplayer-0.20.3-ui.js
+      - run: node --check src/game-0.20.3.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.3";' version.js
+      - name: Verify inline bot submenu
+        run: |
+          grep -F 'id="botPanel" class="stack hidden"' index.html
+          grep -F 'id="botBackBtn"' index.html
+          grep -F 'id="botStartBtn"' index.html
+          if grep -F 'singleplayer-0.20.2-ui.js' index.html; then
+            echo 'Old overlay UI is still active'
+            exit 1
+          fi
+      - name: Verify purple singleplayer status kind
+        run: |
+          grep -F 'this.__kdjSinglePlayer ? "singleplayer" : kind' src/singleplayer-0.20.3-status.js
+          grep -F '.connection-dot.singleplayer' singleplayer-0.20.3.css
+      - run: grep -F 'src/game-0.20.3.js?v=0.20.3' index.html
