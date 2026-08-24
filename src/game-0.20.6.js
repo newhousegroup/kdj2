@@ -1,4 +1,4 @@
-import { patchGameSource as patch0206 } from "./patch-0.20.6.js?v=0.20.6";
+import { patchGameSource as patch0206 } from "./patch-0.20.6.js?v=0.20.6-playerfix";
 
 const NativeBlob = globalThis.Blob;
 let patchedFinalGame = false;
@@ -11,7 +11,8 @@ class KDJPatchedBlob0206 extends NativeBlob {
       options?.type === "text/javascript" &&
       parts.length === 1 &&
       typeof parts[0] === "string" &&
-      parts[0].includes("const helmDirection = ship.speed >= 0 ? -1 : 1;") &&
+      parts[0].includes("function processPlayer(p, input, dt)") &&
+      parts[0].includes("function advanceGuestPrediction(now)") &&
       parts[0].includes("British ${Number(state.score?.british || 0)} - ${Number(state.score?.french || 0)} French")
     ) {
       nextParts = [patch0206(parts[0])];
