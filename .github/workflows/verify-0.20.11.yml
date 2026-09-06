@@ -27,9 +27,18 @@ jobs:
           grep -F 'game-0.9.3.js' src/boot-0.20.11.js
           grep -F 'three.module.js' src/boot-0.20.11.js
           grep -F 'generated-source' src/boot-0.20.11.js
+          grep -F 'runtime-renderer' src/boot-0.20.11.js
+          grep -F 'runtime-scene' src/boot-0.20.11.js
+          grep -F 'runtime-ships' src/boot-0.20.11.js
+          grep -F 'runtime-controls' src/boot-0.20.11.js
+          grep -F 'runtime-loop' src/boot-0.20.11.js
           grep -F 'game-evaluated' src/boot-0.20.11.js
           grep -F 'first-frame' src/boot-0.20.11.js
           grep -F 'finishGameEvaluation' src/game-0.20.11.js
+      - name: Ensure progress instrumentation is non-fatal
+        run: |
+          grep -F 'if (!source.includes(marker)) return source;' src/boot-0.20.11.js
+          grep -F 'const tailIndex = source.lastIndexOf(tailMarker);' src/boot-0.20.11.js
       - name: Ensure 0.20.10 coarse launcher is not active
         run: |
           if grep -F 'src/game-0.20.10.js?v=0.20.10' index.html; then exit 1; fi
