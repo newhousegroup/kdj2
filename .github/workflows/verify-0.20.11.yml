@@ -1,0 +1,36 @@
+name: Verify 0.20.11
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-02011:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --check src/boot-0.20.11.js
+      - run: node --check src/game-0.20.11.js
+      - run: grep -F 'window.KDJ_VERSION = "0.20.11";' version.js
+      - run: grep -F 'src/boot-0.20.11.js?v=0.20.11' index.html
+      - run: grep -F 'src/game-0.20.11.js?v=0.20.11' index.html
+      - run: grep -F 'Loading... (0%)' index.html
+      - name: Verify granular game boot milestones
+        run: |
+          grep -F 'game-0.20.9.js' src/boot-0.20.11.js
+          grep -F 'game-0.19.8.js' src/boot-0.20.11.js
+          grep -F 'game-0.12.1.js' src/boot-0.20.11.js
+          grep -F 'game-0.9.3.js' src/boot-0.20.11.js
+          grep -F 'three.module.js' src/boot-0.20.11.js
+          grep -F 'generated-source' src/boot-0.20.11.js
+          grep -F 'game-evaluated' src/boot-0.20.11.js
+          grep -F 'first-frame' src/boot-0.20.11.js
+          grep -F 'finishGameEvaluation' src/game-0.20.11.js
+      - name: Ensure 0.20.10 coarse launcher is not active
+        run: |
+          if grep -F 'src/game-0.20.10.js?v=0.20.10' index.html; then exit 1; fi
+          if grep -F 'src/boot-0.20.10.js?v=0.20.10' index.html; then exit 1; fi
