@@ -85,9 +85,24 @@
     if (!filename.startsWith("three.")) resourceTasks.set(`/src/${filename}`, task);
   }
 
-  addTask("generated-source", 5);
-  addTask("game-evaluated", 6);
-  addTask("first-frame", 5);
+  // These are real synchronous initialization checkpoints injected into the final
+  // generated game source. They split the old 90–95% black box into observable
+  // renderer/scene/world/control/loop subprocesses without changing gameplay.
+  const runtimeTasks = [
+    "runtime-renderer",
+    "runtime-scene",
+    "runtime-ships",
+    "runtime-controls",
+    "runtime-loop"
+  ];
+  addTask("generated-source", 4);
+  addTask("runtime-renderer", 2);
+  addTask("runtime-scene", 2);
+  addTask("runtime-ships", 3);
+  addTask("runtime-controls", 2);
+  addTask("runtime-loop", 1);
+  addTask("game-evaluated", 3);
+  addTask("first-frame", 3);
 
   completed.add("bootstrap");
 
@@ -118,10 +133,10 @@
     // A successful evaluated module implies every dependency that mattered was
     // resolved even if a browser omitted a cached resource from ResourceTiming.
     for (const task of chainTasks) completed.add(task);
+    for (const task of runtimeTasks) completed.add(task);
+    completed.add("generated-source");
     for (const task of weights.keys()) {
-      if (task.startsWith("css-") || task.startsWith("script-") || task === "fonts" || task === "game-entry") {
-        completed.add(task);
-      }
+      if (task.startsWith("css-") || task.startsWith("script-") || task === "fonts" || task === "game-entry") completed.add(task);
     }
     displayedPercent = 100;
     render();
@@ -147,8 +162,6 @@
     if (!value) return null;
     try {
       const pathname = new URL(value, location.href).pathname;
-      // Prefer the most specific suffix. This matters for e.g. network.js vs
-      // network-0.19.9.js and keeps one resource from satisfying two tasks.
       let best = null;
       for (const [suffix, task] of resourceTasks) {
         if (pathname.endsWith(suffix) && (!best || suffix.length > best[0].length)) best = [suffix, task];
@@ -187,21 +200,46 @@
   if (document.fonts?.ready) document.fonts.ready.then(() => complete("fonts"), () => complete("fonts"));
   else complete("fonts");
 
-  // Observe the actual final generated JavaScript source. Every historical Blob
-  // patcher ultimately calls through this base class, so this milestone only fires
-  // once the nested source has been assembled and transformed.
+  function injectAfter(source, marker, task) {
+    if (!source.includes(marker)) return source;
+    return source.replace(marker, `${marker}\nwindow.KDJLoadingProgress?.complete(${JSON.stringify(task)});`);
+  }
+
+  // Every historical Blob patcher ultimately calls through this base class. At
+  // that point the source has already received all gameplay patches, so we can add
+  // non-fatal progress checkpoints to the final program without participating in
+  // the fragile historical patch-matching chain.
   class KDJProgressBlob extends NativeBlob {
     constructor(parts = [], options = {}) {
-      super(parts, options);
-      if (
+      let nextParts = parts;
+      const isGameSource =
         options?.type === "text/javascript" &&
         parts.length === 1 &&
         typeof parts[0] === "string" &&
         parts[0].includes("function simulateShips(dt)") &&
-        parts[0].includes("function processPlayer(p, input, dt)")
-      ) {
-        complete("generated-source");
+        parts[0].includes("function processPlayer(p, input, dt)");
+
+      if (isGameSource) {
+        let source = parts[0];
+        source = injectAfter(
+          source,
+          'const renderer = new THREE.WebGLRenderer({ canvas: $("#gameCanvas"), antialias: true, powerPreference: "high-performance" });',
+          "runtime-renderer"
+        );
+        source = injectAfter(source, "scene.add(ocean);", "runtime-scene");
+        source = injectAfter(source, 'shipMeshes.french = makeShip("french");', "runtime-ships");
+        source = injectAfter(source, 'ui.leave.onclick = () => returnToMenu("You left the room.");', "runtime-controls");
+
+        const tailMarker = "\nrequestAnimationFrame(frame);";
+        const tailIndex = source.lastIndexOf(tailMarker);
+        if (tailIndex >= 0) {
+          source = `${source.slice(0, tailIndex)}\nwindow.KDJLoadingProgress?.complete("runtime-loop");${source.slice(tailIndex)}`;
+        }
+        nextParts = [source];
       }
+
+      super(nextParts, options);
+      if (isGameSource) complete("generated-source");
     }
   }
   globalThis.Blob = KDJProgressBlob;
@@ -223,9 +261,11 @@
     render,
     percent: () => displayedPercent,
     finishGameEvaluation() {
-      // Import success is the strongest signal that the whole dependency graph
-      // finished, so fill any timing entries the browser did not expose.
+      // Import success is the strongest signal that all required source/resource
+      // work really finished. Fill only browser-hidden timing gaps at this point.
       for (const task of chainTasks) completed.add(task);
+      for (const task of runtimeTasks) completed.add(task);
+      completed.add("generated-source");
       complete("game-evaluated");
     }
   });
@@ -233,9 +273,7 @@
   // Preserve the KdJ boot-error spelling from 0.20.9.
   const nativeConsoleError = console.error.bind(console);
   console.error = (...args) => {
-    if (typeof args[0] === "string" && /^(?:KDJ2|KdJ2)(?:\s+[^\s]+)?\s+boot failed$/i.test(args[0].trim())) {
-      args[0] = "KdJ2 boot failed";
-    }
+    if (typeof args[0] === "string" && /^(?:KDJ2|KdJ2)(?:\s+[^\s]+)?\s+boot failed$/i.test(args[0].trim())) args[0] = "KdJ2 boot failed";
     nativeConsoleError(...args);
   };
 
