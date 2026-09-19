@@ -1,5 +1,5 @@
 (() => {
-  let difficulty = "medium";
+  let difficulty = "hard";
 
   function resetPanels() {
     document.querySelector("#joinPanel")?.classList.add("hidden");
@@ -19,7 +19,7 @@
   }
 
   function selectDifficulty(value) {
-    if (value !== "easy" && value !== "medium") return;
+    if (value !== "easy" && value !== "hard") return;
     difficulty = value;
     for (const button of document.querySelectorAll("#botPanel .difficulty-option")) {
       const selected = button.dataset.difficulty === difficulty;
@@ -52,7 +52,7 @@
       }).observe(lobby, { attributes: true, attributeFilter: ["class"] });
     }
 
-    selectDifficulty("medium");
+    selectDifficulty("hard");
     resetPanels();
   }
 
